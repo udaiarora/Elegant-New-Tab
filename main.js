@@ -25,10 +25,14 @@ function cb(d) {
 			var tmp       = document.createElement ('a');
 			tmp.href   = d[i].url;
 			var arr = tmp.hostname.split(".");
-			var logoUrl="http://data.scrapelogo.com/"+arr[arr.length-2]+"."+arr[arr.length-1]+"/nlogo";
+			// var logoUrl="http://data.scrapelogo.com/"+arr[arr.length-2]+"."+arr[arr.length-1]+"/nlogo";
+			// var logoUrl="http://"+arr[arr.length-2]+"."+arr[arr.length-1]+"/favicon.ico";
+			var logoUrl = "chrome://favicon/http://"+tmp.hostname;
+			var favIco= "<img class='favico' src='"+logoUrl+"'/>";
+
 			// document.querySelector("#top").innerHTML="<img src="+logoUrl+"/>"
 
-			top.innerHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default' style='postion:relative'>"+d[i].title+"</a>"
+			top.innerHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default'>"+favIco+d[i].title+"</a>"
 			//<div style='background-image: linear-gradient(160deg,#1111aa,blue);' class='top-site-overlay'>&nbsp;</div>
 		}
 		
