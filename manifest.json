@@ -5,9 +5,12 @@
 	"version": "0.1",
 	"chrome_url_overrides" : {
 		"newtab": "ent.html"
-		},
-		"permissions": [
-		"unlimitedStorage",
-		"notifications"
-		]
-	}
+	},
+	"permissions": [
+        "http://*/*",
+        "https://*/*",
+        "topSites",
+        "unlimitedStorage",
+        "notifications"
+	]
+}

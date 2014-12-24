@@ -1,0 +1,76 @@
+html {
+	min-height: 700px;
+	min-width: 900px;
+}
+
+.hidden {
+	display: none;
+}
+
+.clearfix {
+	clear: both;
+}
+
+.bg, .overlay {
+	position: absolute;
+	-webkit-filter: blur(4px);
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+.overlay {
+	background-image: linear-gradient(160deg,#e0be00,#dc4225);
+	opacity: 0.3;
+}
+
+.main-content {
+	z-index: 999;
+}
+
+
+.search-container {
+	/*position: relative;*/
+	margin-left: 25%;
+	margin-top: 100px;
+	width: 50%;
+	text-align: center;
+}
+
+#search-bar {
+	width: 100%;
+	font-size: 25px;
+	color: #aaa;
+}
+
+
+.top-results {
+	margin-top: 50px;
+	text-align: center;
+}
+
+
+.top-site {
+	display: inline-block;
+	background-color: #bbb !important;
+	opacity: 0.8;
+	/*float: left;*/
+	width: 250px;
+	padding: 15px;
+	white-space:nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.top-site-overlay {
+	position:absolute; 
+	z-index: -1;
+	top:0px;
+	bottom:0px;
+	left: 0px;
+	right: 0px;
+	display:inline-block;
+	opacity: 0.4;
+}
