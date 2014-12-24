@@ -12,6 +12,7 @@
         "chrome://favicon/",
         "topSites",
         "tabs",
+        "geolocation",
         "unlimitedStorage",
         "notifications"
 	]
