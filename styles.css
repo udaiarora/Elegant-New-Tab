@@ -1,6 +1,10 @@
 html {
-	min-height: 700px;
+	min-height: 650px;
 	min-width: 900px;
+}
+
+.inline-block {
+	display: inline-block;
 }
 
 .hidden {
@@ -9,6 +13,15 @@ html {
 
 .clearfix {
 	clear: both;
+}
+
+.down-arrow {
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.up-arrow {
+	-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
 }
 
 .bg, .overlay {
@@ -34,12 +47,14 @@ html {
 	position: relative;
 	left: 50%;
 	margin-top: 50px;
+	width: 500px;
+	height: 140px;
 }
 
 .search-container {
 	/*position: relative;*/
 	margin-left: 25%;
-	margin-top: 80px;
+	margin-top: 20px;
 	width: 50%;
 	text-align: center;
 }
@@ -61,9 +76,9 @@ html {
 	postion:relative;
 	display: inline-block;
 	background-color: #bbb !important;
-	opacity: 0.8;
+	opacity: 0.82;
 	/*float: left;*/
-	width: 250px;
+	width: 260px;
 	padding: 15px;
 }
 
@@ -86,6 +101,7 @@ html {
 }
 
 .favico-text {
+	margin-left: 5px;
 	margin-top: 4px;
 	font-size: 14px;
 	display: inline-block;
@@ -93,4 +109,21 @@ html {
 	white-space:nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+.favico-text-small {
+	width: 38px;
+}
+
+.favico-text-smaller {
+	margin-left: 2px;
+	width: 20px;
+}
+
+.weather-text-container {
+	position: absolute;
+	top: -50px; 
+}
+
+#weather {
+	margin-left: -210px;
 }

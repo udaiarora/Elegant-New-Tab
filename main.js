@@ -1,3 +1,6 @@
+var unit="F";
+
+
 $(document).ready(function(){
 	//Initialize Material Design
 	$.material.init()
@@ -39,10 +42,34 @@ function showWeather(location) {
 			lon: location.coords.longitude
 		}
 	}).success(function(data){
+		console.log(data)
 		weatherCode=data.weather[0].id;
 		sunset=data.sys.susnet;
 		var iconClass= getWeatherIcon(weatherCode, sunset);
-		$("#weather").addClass(iconClass)
+		$("#weather").addClass("sunny");
+		$("#loc").html(data.name);
+		$("#cond").html(data.weather[0].main);
+		var cur_temp=parseInt(data.main.temp);
+		var min_temp=parseInt(data.main.temp_min);
+		var max_temp=parseInt(data.main.temp_max);
+		if(unit=="F") {
+			cur_temp=(cur_temp-273.15)* 1.8000 + 32.00;
+			min_temp=(min_temp-273.15)* 1.8000 + 32.00;
+			max_temp=(max_temp-273.15)* 1.8000 + 32.00;
+		}
+		else if(unit=="C") {
+			cur_temp-=273.15;
+			min_temp-=273.15;
+			max_temp-=273.15;
+		}
+		cur_temp=parseInt(cur_temp);
+		min_temp=parseInt(min_temp);
+		max_temp=parseInt(max_temp);
+
+		$("#curr").html(cur_temp);
+		$("#min").html(min_temp);
+		$("#max").html(max_temp);
+		$("#thermo").html(unit);
 	})
 
 	
@@ -52,6 +79,7 @@ function showWeather(location) {
 
 
 function getWeatherIcon(weatherCode, sunset) {
+	console.log(weatherCode)
 	var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
 	var thunderstorm = [210,211,212,221,230,231,232,956,957,958,959,960,961,962];
 	var snow= [600,601,602,611,612,615,616,620,621,622,906];
@@ -78,18 +106,19 @@ function getWeatherIcon(weatherCode, sunset) {
 	else if(rainbow.indexOf(weatherCode)>-1) {
 		return "rainbow";
 	}
-	else if(haze.indexOf(weatherCode)>-1) {
-		return "haze";
+	// else if(haze.indexOf(weatherCode)>-1) {
+		else {
+			return "haze";
+		}
 	}
-}
 
-function showTopSites(d) {
-	for(i=0;i<12;i++) {
-		var top = document.querySelector("#top .row"+parseInt(i/3));
-		if(d[i]) {
-			var tmp       = document.createElement ('a');
-			tmp.href   = d[i].url;
-			var arr = tmp.hostname.split(".");
+	function showTopSites(d) {
+		for(i=0;i<12;i++) {
+			var top = document.querySelector("#top .row"+parseInt(i/3));
+			if(d[i]) {
+				var tmp       = document.createElement ('a');
+				tmp.href   = d[i].url;
+				var arr = tmp.hostname.split(".");
 			// var logoUrl="http://data.scrapelogo.com/"+arr[arr.length-2]+"."+arr[arr.length-1]+"/nlogo";
 			// var logoUrl="http://"+arr[arr.length-2]+"."+arr[arr.length-1]+"/favicon.ico";
 			var logoUrl = "chrome://favicon/http://"+tmp.hostname;
@@ -102,5 +131,31 @@ function showTopSites(d) {
 		}
 		
 	}
+
+
+	$("body").on("click", function(event){
+		document.querySelector("#search-bar").focus();
+		event.stopPropagation();
+	})
+
+
+	$("#location").on("click", function(){
+		navigator.geolocation.getCurrentPosition(showWeather);
+	});
+
+	$("#weatherInfo").on("click", function(){
+		if(unit=="K")
+			unit="C";
+		else if(unit=="C")
+			unit="F";
+		else unit="K";
+		navigator.geolocation.getCurrentPosition(showWeather);
+	});
+
+	$(document).keypress(function(e) {
+		if(e.which == 13) {
+        window.open("https://www.google.com/#q="+$("#search-bar").val(),"_self");
+    }
+});
 }
 

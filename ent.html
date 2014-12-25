@@ -19,31 +19,60 @@
 	<div class="overlay">&nbsp;</div><br>
 	<div class="main-content">
 		<div class="weather-container">
-			<div class="sunny"></div> 
+			<!-- <div class="sunny"></div> 
 			<div class="cloudy"></div>
 			<div class="rainy"></div>
 			<div class="snowy"></div>
 			<div class="rainbow"></div>
 			<div class="starry"></div>
 			<div class="stormy"></div>
-			<div class="haze"></div>
-			<!-- <div id="weather"></div> -->
-		</div>
-		<div class="search-container">
-			<input id="search-bar" type="text" class="form-control empty" placeholder="Search">
-		</div>
-		<div id="top" class="top-results">
-			<!-- +"<img src='"+"chrome://favicon/http://"+tmp.hostname+"'/>" -->
+			<div class="haze"></div> -->
+			<div id="weather" class="inline-block"></div>
+			<div class="weather-text-container">
+				<a id="location" href="#" class="top-site btn btn-default">
+					<img class="favico" src="/location.svg">
+					<span class="favico-text" id="loc"></span>
+				</a>
+				<a id="weatherInfo" href="#" class="top-site btn btn-default">
+					<div><span class="favico-text" id="cond"></span></div><br>
+					<div>
+						<div class="inline-block"><img class="favico" src="/arrow.svg">
+							<span class="favico-text favico-text-small" id="curr"></span>
+						</div>
 
-			<!-- <div class="btn-group btn-group-justified"> -->
-			<div class="row0 clearfix top-site-row"></div>
-			<div class="row1 clearfix top-site-row"></div>
-			<div class="row2 clearfix top-site-row"></div>
-			<div class="row3 clearfix top-site-row"></div>
-			<!-- </div> -->
-		</div>
+						<div class="inline-block"><img class="favico up-arrow" src="/arrow.svg">
+							<span class="favico-text favico-text-small" id="max"></span></div>
 
-	</div> 
+							<div class="inline-block"><img class="favico down-arrow" src="/arrow.svg">
+								<span class="favico-text favico-text-small" id="min"></span>
+							</div>
 
-</body>
-</html>
+							<div class="inline-block"><img class="favico" src="/thermo.svg">
+							<span class="favico-text favico-text-smaller" id="thermo"></span>
+							</div>
+						</div>
+
+					</a>
+
+
+				</div>
+
+			</div>
+			<div class="search-container">
+				<input id="search-bar" type="text" class="form-control empty" placeholder="Search">
+			</div>
+			<div id="top" class="top-results">
+				<!-- +"<img src='"+"chrome://favicon/http://"+tmp.hostname+"'/>" -->
+
+				<!-- <div class="btn-group btn-group-justified"> -->
+				<div class="row0 clearfix top-site-row"></div>
+				<div class="row1 clearfix top-site-row"></div>
+				<div class="row2 clearfix top-site-row"></div>
+				<div class="row3 clearfix top-site-row"></div>
+				<!-- </div> -->
+			</div>
+
+		</div> 
+
+	</body>
+	</html>
