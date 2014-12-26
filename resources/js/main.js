@@ -1,9 +1,8 @@
- 'use strict';
+ // 'use strict';
 
  //Globals
-var unit = "F";
 
-var elegantNewTabApp=(function($, document) {
+var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
 	var setPageBG= function (){
 		$.ajax({
@@ -19,6 +18,17 @@ var elegantNewTabApp=(function($, document) {
 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
 		});
 	};
+
+	var getWeatherUnit = function() {
+		if(!chromeLocalStorage.unit) {
+			chromeLocalStorage.unit="F";
+		}
+		return chromeLocalStorage.unit;
+	};
+
+	var setWeatherUnit = function(unitToBeSet) {
+		chromeLocalStorage.unit=unitToBeSet;
+	}
 
 	var getWeatherIcon= function (weatherCode, sunset) {
 		var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
@@ -54,7 +64,8 @@ var elegantNewTabApp=(function($, document) {
 		}
 	};
 
-	var showWeather= function (location) {
+	var getAndSetWeatherWithLocation= function (location, callbackFunction) {
+		var returnObj;
 		var weatherCode;
 		var sunset;
 		$.ajax({
@@ -67,12 +78,10 @@ var elegantNewTabApp=(function($, document) {
 			weatherCode=data.weather[0].id;
 			sunset=data.sys.susnet;
 			var iconClass= getWeatherIcon(weatherCode, sunset);
-			$("#weather").addClass(iconClass);
-			$("#loc").html(data.name);
-			$("#cond").html(data.weather[0].main);
 			var cur_temp=parseInt(data.main.temp);
 			var min_temp=parseInt(data.main.temp_min);
 			var max_temp=parseInt(data.main.temp_max);
+			var unit = elegantNewTabApp.getWeatherUnit();
 			if(unit=="F") {
 				cur_temp=(cur_temp-273.15)* 1.8000 + 32.00;
 				min_temp=(min_temp-273.15)* 1.8000 + 32.00;
@@ -87,10 +96,17 @@ var elegantNewTabApp=(function($, document) {
 			min_temp=parseInt(min_temp);
 			max_temp=parseInt(max_temp);
 
-			$("#curr").html(cur_temp);
-			$("#min").html(min_temp);
-			$("#max").html(max_temp);
-			$("#thermo").html(unit);
+			returnObj= {
+				"iconClass" : iconClass,
+				"cityName" : data.name,
+				"weatherDesc" : data.weather[0].main,
+				"cur_temp" : cur_temp,
+				"min_temp" : min_temp,
+				"max_temp" : max_temp,
+				"unit" : unit
+			};
+
+			callbackFunction(returnObj);	
 		});
 	};
 
@@ -117,17 +133,40 @@ var elegantNewTabApp=(function($, document) {
 
 	return {
 		setPageBG:setPageBG,
-		showWeather:showWeather,
+		getAndSetWeatherWithLocation:getAndSetWeatherWithLocation,
+		getWeatherUnit:getWeatherUnit,
+		setWeatherUnit:setWeatherUnit,
 		showTopSites:showTopSites
 	}
 
 
-})(jQuery, document);
+})(jQuery, document, localStorage);
+
+
+
+//Global Functions
+
+var setWeather = function (weatherObj) {
+	$("#weather").addClass(weatherObj.iconClass);
+	$("#loc").html(weatherObj.cityName);
+	$("#cond").html(weatherObj.weatherDesc);
+	$("#curr").html(weatherObj.cur_temp);
+	$("#min").html(weatherObj.min_temp);
+	$("#max").html(weatherObj.max_temp);
+	$("#thermo").html(weatherObj.unit);
+}
+
+
+var getAndSetWeather = function () {
+	navigator.geolocation.getCurrentPosition(
+		function(location) {
+			elegantNewTabApp.getAndSetWeatherWithLocation(location,setWeather);
+		});
+}
 
 
 
 //Event Handlers
-
 $(document).ready(function(){
 	//Initialize Material Design
 	$.material.init();
@@ -142,7 +181,7 @@ $(document).ready(function(){
 	chrome.topSites.get(elegantNewTabApp.showTopSites);
 
 	//Get Geolocation for Weather
-	navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
+	getAndSetWeather();
 
 
 	$("body").on("click", function(){
@@ -154,16 +193,24 @@ $(document).ready(function(){
 	});
 
 	$("#location").on("click", function(){
-		navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
+		getAndSetWeather();
 	});
 
 	$("#weatherInfo").on("click", function(){
-		if(unit=="K")
+		var unit=elegantNewTabApp.getWeatherUnit();
+		if(unit=="K") {
 			unit="C";
-		else if(unit=="C")
+			elegantNewTabApp.setWeatherUnit("C");
+		}
+		else if(unit=="C") {
 			unit="F";
-		else unit="K";
-		navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
+			elegantNewTabApp.setWeatherUnit("F");
+		}
+		else {
+			unit="K";
+			elegantNewTabApp.setWeatherUnit("K");
+		}
+		getAndSetWeather();
 	});
 
 	$("#search-bar").keypress(function(e) {
