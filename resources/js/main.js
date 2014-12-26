@@ -143,32 +143,35 @@ $(document).ready(function(){
 
 	//Get Geolocation for Weather
 	navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
-});
 
-$("body").on("click", function(){
-	document.querySelector("#search-bar").focus();
-});
 
-$(".top-site").on("click", function(e){
-	e.stopPropagation();
-});
+	$("body").on("click", function(){
+		document.querySelector("#search-bar").focus();
+	});
 
-$("#location").on("click", function(){
-	navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
-});
+	$(".top-site").on("click", function(e){
+		e.stopPropagation();
+	});
 
-$("#weatherInfo").on("click", function(){
-	if(unit=="K")
-		unit="C";
-	else if(unit=="C")
-		unit="F";
-	else unit="K";
-	navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
-});
+	$("#location").on("click", function(){
+		navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
+	});
 
-$("#search-bar").keypress(function(e) {
-	if(e.which == 13) {
-		window.open("https://www.google.com/#q="+$("#search-bar").val(),"_self");
-	}
+	$("#weatherInfo").on("click", function(){
+		if(unit=="K")
+			unit="C";
+		else if(unit=="C")
+			unit="F";
+		else unit="K";
+		navigator.geolocation.getCurrentPosition(elegantNewTabApp.showWeather);
+	});
+
+	$("#search-bar").keypress(function(e) {
+		if(e.which == 13) {
+			window.open("https://www.google.com/#q="+$("#search-bar").val(),"_self");
+		}
+
+	});
+
 
 });
