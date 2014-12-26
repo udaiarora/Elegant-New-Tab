@@ -3,6 +3,13 @@ html {
 	min-width: 900px;
 }
 
+/*
+Oveeride
+*/
+.btn {
+	text-transform:none;
+}
+
 .inline-block {
 	display: inline-block;
 }
@@ -61,8 +68,8 @@ html {
 
 #search-bar {
 	width: 100%;
-	font-size: 25px;
-	color: #aaa;
+	font-size: 20px;
+	color: #222;
 }
 
 
@@ -73,14 +80,16 @@ html {
 
 
 .top-site {
-	postion:relative;
+	/*postion:relative;*/
 	display: inline-block;
-	background-color: #bbb !important;
-	opacity: 0.82;
+	background-color: #ccc !important;
+	opacity: 0.72;
 	/*float: left;*/
 	width: 260px;
 	padding: 15px;
+	color: #000;
 }
+
 
 /*
 .top-site-overlay {

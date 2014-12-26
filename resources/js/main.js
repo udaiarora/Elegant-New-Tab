@@ -46,7 +46,7 @@ function showWeather(location) {
 		weatherCode=data.weather[0].id;
 		sunset=data.sys.susnet;
 		var iconClass= getWeatherIcon(weatherCode, sunset);
-		$("#weather").addClass("sunny");
+		$("#weather").addClass(iconClass);
 		$("#loc").html(data.name);
 		$("#cond").html(data.weather[0].main);
 		var cur_temp=parseInt(data.main.temp);
@@ -133,11 +133,13 @@ function getWeatherIcon(weatherCode, sunset) {
 	}
 
 
-	$("body").on("click", function(event){
+	$("body").on("click", function(){
 		document.querySelector("#search-bar").focus();
-		event.stopPropagation();
-	})
+	});
 
+	$(".top-site").on("click", function(e){
+		e.stopPropagation()
+	});
 
 	$("#location").on("click", function(){
 		navigator.geolocation.getCurrentPosition(showWeather);
@@ -152,10 +154,11 @@ function getWeatherIcon(weatherCode, sunset) {
 		navigator.geolocation.getCurrentPosition(showWeather);
 	});
 
-	$(document).keypress(function(e) {
+	$("#search-bar").keypress(function(e) {
 		if(e.which == 13) {
         window.open("https://www.google.com/#q="+$("#search-bar").val(),"_self");
     }
+
 });
 }
 

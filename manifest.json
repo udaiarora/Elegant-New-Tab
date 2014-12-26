@@ -4,7 +4,7 @@
 	"description": "A better New Tab",
 	"version": "0.1",
 	"chrome_url_overrides" : {
-		"newtab": "ent.html"
+		"newtab": "/views/ent.html"
 	},
 	"permissions": [
         "http://*/*",
