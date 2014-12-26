@@ -1,15 +1,21 @@
+/*Global*/
 html {
 	min-height: 650px;
 	min-width: 900px;
 }
 
-/*
-Oveeride
-*/
+
+
+
+/*Over-ride*/
 .btn {
 	text-transform:none;
 }
 
+
+
+
+/*Common*/
 .inline-block {
 	display: inline-block;
 }
@@ -22,15 +28,6 @@ Oveeride
 	clear: both;
 }
 
-.down-arrow {
-	-webkit-transform: rotate(90deg);
-	transform: rotate(90deg);
-}
-.up-arrow {
-	-webkit-transform: rotate(270deg);
-	transform: rotate(270deg);
-}
-
 .bg, .overlay {
 	position: absolute;
 	-webkit-filter: blur(4px);
@@ -41,7 +38,8 @@ Oveeride
 }
 
 .overlay {
-	background-image: linear-gradient(160deg,#e0be00,#dc4225);
+	/*background-image: linear-gradient(160deg,#e0be00,#dc4225);*/
+	background-image: linear-gradient(160deg,#11126B,#AA131C);
 	opacity: 0.3;
 }
 
@@ -50,6 +48,22 @@ Oveeride
 }
 
 
+
+
+/*Images*/
+.down-arrow {
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.up-arrow {
+	-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
+
+
+
+/*Weather*/
 .weather-container {
 	position: relative;
 	left: 50%;
@@ -58,6 +72,19 @@ Oveeride
 	height: 140px;
 }
 
+.weather-text-container {
+	position: absolute;
+	top: -40px; 
+}
+
+#weather {
+	margin-left: -210px;
+}
+
+
+
+
+/*Search*/
 .search-container {
 	/*position: relative;*/
 	margin-left: 25%;
@@ -73,26 +100,26 @@ Oveeride
 }
 
 
+
+
+/*Top Sites*/
 .top-results {
 	margin-top: 50px;
 	text-align: center;
 }
-
 
 .top-site {
 	/*postion:relative;*/
 	display: inline-block;
 	background-color: #ccc !important;
 	opacity: 0.72;
-	/*float: left;*/
+	margin: 5px 5px;
 	width: 260px;
 	padding: 15px;
 	color: #000;
 }
 
-
-/*
-.top-site-overlay {
+/*.top-site-overlay {
 	position:absolute; 
 	z-index: -1;
 	top:0px;
@@ -101,8 +128,8 @@ Oveeride
 	right: 0px;
 	display:inline-block;
 	opacity: 0.4;
-}
-*/
+}*/
+
 .favico {
 	height:20px;
 	width:20px;
@@ -115,6 +142,7 @@ Oveeride
 	font-size: 14px;
 	display: inline-block;
 	width: 200px;
+	height: 15px;
 	white-space:nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -126,13 +154,4 @@ Oveeride
 .favico-text-smaller {
 	margin-left: 2px;
 	width: 20px;
-}
-
-.weather-text-container {
-	position: absolute;
-	top: -50px; 
-}
-
-#weather {
-	margin-left: -210px;
 }

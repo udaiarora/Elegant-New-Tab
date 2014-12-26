@@ -64,50 +64,61 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 		}
 	};
 
-	var getAndSetWeatherWithLocation= function (location, callbackFunction) {
-		var returnObj;
-		var weatherCode;
-		var sunset;
-		$.ajax({
-			url: "http://api.openweathermap.org/data/2.5/weather",
-			data: {
-				lat: location.coords.latitude,
-				lon: location.coords.longitude
-			}
-		}).success(function (data){
-			weatherCode=data.weather[0].id;
-			sunset=data.sys.susnet;
-			var iconClass= getWeatherIcon(weatherCode, sunset);
-			var cur_temp=parseInt(data.main.temp);
-			var min_temp=parseInt(data.main.temp_min);
-			var max_temp=parseInt(data.main.temp_max);
-			var unit = elegantNewTabApp.getWeatherUnit();
-			if(unit=="F") {
-				cur_temp=(cur_temp-273.15)* 1.8000 + 32.00;
-				min_temp=(min_temp-273.15)* 1.8000 + 32.00;
-				max_temp=(max_temp-273.15)* 1.8000 + 32.00;
-			}
-			else if(unit=="C") {
-				cur_temp-=273.15;
-				min_temp-=273.15;
-				max_temp-=273.15;
-			}
-			cur_temp=parseInt(cur_temp);
-			min_temp=parseInt(min_temp);
-			max_temp=parseInt(max_temp);
+	var getAndSetWeatherWithLocation= function (location, callbackFunction, cached) {
+		var timestamp= chromeLocalStorage.weatherTimestamp;
+		
+		//If cached weather is less than 30 mins old
+		if(timestamp && timestamp>Date.now()-1800000 && chromeLocalStorage.weatherData && cached) {
+			callbackFunction(JSON.parse(chromeLocalStorage.weatherData));
+		}
 
-			returnObj= {
-				"iconClass" : iconClass,
-				"cityName" : data.name,
-				"weatherDesc" : data.weather[0].main,
-				"cur_temp" : cur_temp,
-				"min_temp" : min_temp,
-				"max_temp" : max_temp,
-				"unit" : unit
-			};
+		//If cached weather is older than 30 mins
+		else {
+			var returnObj;
+			var weatherCode;
+			var sunset;
+			$.ajax({
+				url: "http://api.openweathermap.org/data/2.5/weather",
+				data: {
+					lat: location.coords.latitude,
+					lon: location.coords.longitude
+				}
+			}).success(function (data){
+				weatherCode=data.weather[0].id;
+				sunset=data.sys.susnet;
+				var iconClass= getWeatherIcon(weatherCode, sunset);
+				var cur_temp=parseInt(data.main.temp);
+				var min_temp=parseInt(data.main.temp_min);
+				var max_temp=parseInt(data.main.temp_max);
+				var unit = elegantNewTabApp.getWeatherUnit();
+				if(unit=="F") {
+					cur_temp=(cur_temp-273.15)* 1.8000 + 32.00;
+					min_temp=(min_temp-273.15)* 1.8000 + 32.00;
+					max_temp=(max_temp-273.15)* 1.8000 + 32.00;
+				}
+				else if(unit=="C") {
+					cur_temp-=273.15;
+					min_temp-=273.15;
+					max_temp-=273.15;
+				}
+				cur_temp=parseInt(cur_temp);
+				min_temp=parseInt(min_temp);
+				max_temp=parseInt(max_temp);
 
-			callbackFunction(returnObj);	
-		});
+				returnObj= {
+					"iconClass" : iconClass,
+					"cityName" : data.name,
+					"weatherDesc" : data.weather[0].main,
+					"cur_temp" : cur_temp,
+					"min_temp" : min_temp,
+					"max_temp" : max_temp,
+					"unit" : unit
+				};
+				chromeLocalStorage.weatherData=JSON.stringify(returnObj);
+				 chromeLocalStorage.weatherTimestamp=Date.now();
+				callbackFunction(returnObj);	
+			});
+		}
 	};
 
 	var showTopSites= function (d) {
@@ -157,10 +168,10 @@ var setWeather = function (weatherObj) {
 }
 
 
-var getAndSetWeather = function () {
+var getAndSetWeather = function (cached) {
 	navigator.geolocation.getCurrentPosition(
 		function(location) {
-			elegantNewTabApp.getAndSetWeatherWithLocation(location,setWeather);
+			elegantNewTabApp.getAndSetWeatherWithLocation(location,setWeather,cached);
 		});
 }
 
@@ -181,7 +192,7 @@ $(document).ready(function(){
 	chrome.topSites.get(elegantNewTabApp.showTopSites);
 
 	//Get Geolocation for Weather
-	getAndSetWeather();
+	getAndSetWeather(true);
 
 
 	$("body").on("click", function(){
@@ -193,7 +204,7 @@ $(document).ready(function(){
 	});
 
 	$("#location").on("click", function(){
-		getAndSetWeather();
+		getAndSetWeather(false);
 	});
 
 	$("#weatherInfo").on("click", function(){
@@ -210,7 +221,7 @@ $(document).ready(function(){
 			unit="K";
 			elegantNewTabApp.setWeatherUnit("K");
 		}
-		getAndSetWeather();
+		getAndSetWeather(false);
 	});
 
 	$("#search-bar").keypress(function(e) {
