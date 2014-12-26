@@ -380,8 +380,8 @@
 
 /* STARRY */
 .starry {
-	-webkit-animation: starry_star 5s ease-in-out infinite;
-	animation: starry_star 5s ease-in-out infinite;
+	-webkit-animation: starry_star 3s ease-in-out infinite;
+	animation: starry_star 3s ease-in-out infinite;
 	background: #fff;
 	border-radius: 50%;  
 	box-shadow:  
@@ -408,8 +408,8 @@
 
 }
 .starry:after { 
-	-webkit-animation: starry 5s ease-in-out infinite; 
-	animation: starry 5s ease-in-out infinite;
+	-webkit-animation: starry 3s ease-in-out infinite; 
+	animation: starry 3s ease-in-out infinite;
 	border-radius: 50%;
 	box-shadow: #FFFFFF -25px 0;
 	content: '';
