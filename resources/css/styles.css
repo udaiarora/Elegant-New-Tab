@@ -30,7 +30,7 @@ html {
 
 .bg, .overlay {
 	position: absolute;
-	-webkit-filter: blur(4px);
+	-webkit-filter: blur(3px);
 	top: 0px;
 	bottom: 0px;
 	left: 0px;
@@ -104,20 +104,60 @@ html {
 
 /*Top Sites*/
 .top-results {
-	margin-top: 50px;
+	margin: 50px auto;
 	text-align: center;
+	width: 900px;
 }
 
-.top-site {
-	/*text-align: left;*/
-	/*postion:relative;*/
+.top-site, .weather-info-button {
+	float: left;
+	position:relative;
 	display: inline-block;
 	background-color: #ccc !important;
-	opacity: 0.72;
 	margin: 5px 5px;
 	width: 260px;
 	padding: 15px;
 	color: #000;
+}
+
+.top-site {
+	opacity: 0;
+}
+
+.close {
+	/*display: none;*/
+	position: absolute;
+	top: 16px;
+	right: 4px;
+	background-image: url("/resources/images/close.svg");
+	height: 20px;
+	width: 20px;
+	background-size: cover;
+}
+
+.close:hover {
+	transition-duration: 0.2s;
+	top:14px;
+	right: 2px;
+	height: 25px;
+	width: 25px;
+}
+
+.animate-up {
+	-webkit-transform: translateY(70px);
+	transform: translateY(70px);
+	-webkit-animation: moveUp 0.4s ease forwards;
+	animation: moveUp 0.4s ease forwards;
+}
+
+@-webkit-keyframes moveUp {
+	0% { }
+	100% { -webkit-transform: translateY(0); opacity: 0.72; }
+}
+
+@keyframes moveUp {
+	0% { }
+	100% { -webkit-transform: translateY(0); transform: translateY(0); opacity: 0.72; }
 }
 
 /*.top-site-overlay {

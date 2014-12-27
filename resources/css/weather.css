@@ -792,7 +792,7 @@
 
 /* HAZE */
 .haze {
-	background: url("/haze.png");
+	background: url("/resources/images/haze.png");
 	height: 100px;
 	width: 100px;
 	background-size: cover;

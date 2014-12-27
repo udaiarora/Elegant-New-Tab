@@ -4,6 +4,11 @@
 
 var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
+	if(!chromeLocalStorage.removedSites) {
+		var arr=[];
+		chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
+	}
+
 	var setPageBG= function (){
 		$.ajax({
 			url: 'http://www.bing.com/HPImageArchive.aspx',
@@ -107,23 +112,41 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 		}
 	};
 
+
+	var removeSite = function(url) {
+		var arr=JSON.parse(chromeLocalStorage.getItem("removedSites"));
+		arr.push(url);
+		chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
+		// chromeLocalStorage.removedSites='{"removed":"'+str.substring(0,str.length)+'"}';
+		chrome.topSites.get(elegantNewTabApp.showTopSites);
+	}
+
 	var showTopSites= function (d) {
-		for(var i=0;i<12;i++) {
-			var top = document.querySelector("#top .row"+parseInt(i/3));
-			if(d[i]) {
-				var tmp       = document.createElement ('a');
-				tmp.href   = d[i].url;
-				var arr = tmp.hostname.split(".");
-			// var logoUrl="http://data.scrapelogo.com/"+arr[arr.length-2]+"."+arr[arr.length-1]+"/nlogo";
-			// var logoUrl="http://"+arr[arr.length-2]+"."+arr[arr.length-1]+"/favicon.ico";
-			var logoUrl = "chrome://favicon/http://"+tmp.hostname;
-			var favIco= "<img class='favico' src='"+logoUrl+"'/>";
-
-			// document.querySelector("#top").innerHTML="<img src="+logoUrl+"/>"
-
-			top.innerHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span></a>";
-			//<div style='background-image: linear-gradient(160deg,#1111aa,blue);' class='top-site-overlay'>&nbsp;</div>
+		var arrObj= JSON.parse(chromeLocalStorage.getItem("removedSites"));
+		var i=0;
+		var counter=0;
+		while(counter<12 && d[i]) {
+			var top = document.querySelector("#top .row"+parseInt(counter/3));
+			if(counter%3==0) {
+				top.innerHTML="";
 			}
+			if(arrObj.indexOf(d[i].url)<0) {
+				counter++;
+				var tmp = document.createElement ('a');
+				tmp.href = d[i].url;
+				var arr = tmp.hostname.split(".");
+				// var logoUrl="http://data.scrapelogo.com/"+arr[arr.length-2]+"."+arr[arr.length-1]+"/nlogo";
+				// var logoUrl="http://"+arr[arr.length-2]+"."+arr[arr.length-1]+"/favicon.ico";
+				var logoUrl = "chrome://favicon/http://"+tmp.hostname;
+				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
+
+				// document.querySelector("#top").innerHTML="<img src="+logoUrl+"/>"
+
+				top.innerHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default animate-up'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
+				//<div style='background-image: linear-gradient(160deg,#1111aa,blue);' class='top-site-overlay'>&nbsp;</div>	
+			}
+
+			i++;
 		}
 	};
 
@@ -133,6 +156,7 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 		getAndSetWeatherWithLocation:getAndSetWeatherWithLocation,
 		getWeatherUnit:getWeatherUnit,
 		setWeatherUnit:setWeatherUnit,
+		removeSite:removeSite,
 		showTopSites:showTopSites
 	}
 
@@ -144,7 +168,6 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 //Global Functions
 
 var setWeather = function (weatherObj) {
-	console.log(localStorage)
 	var user_preffered_unit = elegantNewTabApp.getWeatherUnit();
 	var cur_temp = weatherObj.cur_temp;
 	var min_temp = weatherObj.min_temp;
@@ -201,11 +224,14 @@ $(document).ready(function(){
 	getAndSetWeather(true);
 
 
+
+	
+
 	$("body").on("click", function(){
 		document.querySelector("#search-bar").focus();
 	});
 
-	$(".top-site").on("click", function(e){
+	$("body").on("click", ".top-site, .weather-info-button", function(e){
 		e.stopPropagation();
 	});
 
@@ -234,8 +260,23 @@ $(document).ready(function(){
 		if(e.which == 13) {
 			window.open("https://www.google.com/#q="+$("#search-bar").val(),"_self");
 		}
-
 	});
+
+	// Handle Removing a Top site
+	$("body").on("mouseover", ".top-site", function(){
+		$(this).find(".close").removeClass("hidden");
+	});
+
+	$("body").on("mouseout", ".top-site", function(){
+		$(this).find(".close").addClass("hidden");
+	});
+
+	$("body").on("click", ".close", function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		elegantNewTabApp.removeSite($(this).data("link"));
+	});
+
 
 
 });
