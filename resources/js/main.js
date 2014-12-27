@@ -84,38 +84,24 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 					lon: location.coords.longitude
 				}
 			}).success(function (data){
+				console.log(data)
 				weatherCode=data.weather[0].id;
 				sunset=data.sys.susnet;
 				var iconClass= getWeatherIcon(weatherCode, sunset);
 				var cur_temp=parseInt(data.main.temp);
 				var min_temp=parseInt(data.main.temp_min);
 				var max_temp=parseInt(data.main.temp_max);
-				var unit = elegantNewTabApp.getWeatherUnit();
-				if(unit=="F") {
-					cur_temp=(cur_temp-273.15)* 1.8000 + 32.00;
-					min_temp=(min_temp-273.15)* 1.8000 + 32.00;
-					max_temp=(max_temp-273.15)* 1.8000 + 32.00;
-				}
-				else if(unit=="C") {
-					cur_temp-=273.15;
-					min_temp-=273.15;
-					max_temp-=273.15;
-				}
-				cur_temp=parseInt(cur_temp);
-				min_temp=parseInt(min_temp);
-				max_temp=parseInt(max_temp);
-
+				
 				returnObj= {
 					"iconClass" : iconClass,
 					"cityName" : data.name,
 					"weatherDesc" : data.weather[0].main,
 					"cur_temp" : cur_temp,
 					"min_temp" : min_temp,
-					"max_temp" : max_temp,
-					"unit" : unit
+					"max_temp" : max_temp
 				};
 				chromeLocalStorage.weatherData=JSON.stringify(returnObj);
-				 chromeLocalStorage.weatherTimestamp=Date.now();
+				chromeLocalStorage.weatherTimestamp=Date.now();
 				callbackFunction(returnObj);	
 			});
 		}
@@ -158,13 +144,33 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 //Global Functions
 
 var setWeather = function (weatherObj) {
+	console.log(localStorage)
+	var user_preffered_unit = elegantNewTabApp.getWeatherUnit();
+	var cur_temp = weatherObj.cur_temp;
+	var min_temp = weatherObj.min_temp;
+	var max_temp = weatherObj.max_temp;
+
+	if(user_preffered_unit=="F") {
+		cur_temp=(weatherObj.cur_temp-273.15)* 1.8000 + 32.00;
+		min_temp=(weatherObj.min_temp-273.15)* 1.8000 + 32.00;
+		max_temp=(weatherObj.max_temp-273.15)* 1.8000 + 32.00;
+	}
+	else if(user_preffered_unit=="C") {
+		cur_temp-=273.15;
+		min_temp-=273.15;
+		max_temp-=273.15;
+	}
+	cur_temp=parseInt(cur_temp);
+	min_temp=parseInt(min_temp);
+	max_temp=parseInt(max_temp);
+
 	$("#weather").addClass(weatherObj.iconClass);
 	$("#loc").html(weatherObj.cityName);
 	$("#cond").html(weatherObj.weatherDesc);
-	$("#curr").html(weatherObj.cur_temp);
-	$("#min").html(weatherObj.min_temp);
-	$("#max").html(weatherObj.max_temp);
-	$("#thermo").html(weatherObj.unit);
+	$("#curr").html(cur_temp);
+	$("#min").html(min_temp);
+	$("#max").html(max_temp);
+	$("#thermo").html(elegantNewTabApp.getWeatherUnit());
 }
 
 
@@ -221,7 +227,7 @@ $(document).ready(function(){
 			unit="K";
 			elegantNewTabApp.setWeatherUnit("K");
 		}
-		getAndSetWeather(false);
+		getAndSetWeather(true);
 	});
 
 	$("#search-bar").keypress(function(e) {
