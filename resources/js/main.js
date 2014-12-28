@@ -26,7 +26,7 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
 	var getWeatherUnit = function() {
 		if(!chromeLocalStorage.unit) {
-			chromeLocalStorage.unit="F";
+			chromeLocalStorage.unit="Fahrenheit";
 		}
 		return chromeLocalStorage.unit;
 	};
@@ -70,6 +70,9 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 	};
 
 	var getAndSetWeatherWithLocation= function (location, callbackFunction, cached) {
+		console.log(location);
+		//40.3247917,-74.55568219999999
+		// "http://maps.googleapis.com/maps/api/geocode/json?latlng="++"&sensor=true"
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
 		//If cached weather is less than 30 mins old
@@ -83,34 +86,34 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 			var weatherCode;
 			var sunset;
 			$.ajax({
-				url: "http://api.openweathermap.org/data/2.5/weather",
-				data: {
-					lat: location.coords.latitude,
-					lon: location.coords.longitude
-				}
+			url: "http://api.openweathermap.org/data/2.5/weather",
+			data: {
+				lat: location.coords.latitude,
+				lon: location.coords.longitude
+			}
 			}).success(function (data){
 				console.log(data)
 				weatherCode=data.weather[0].id;
 				sunset=data.sys.susnet;
 				var iconClass= getWeatherIcon(weatherCode, sunset);
 				var cur_temp=parseInt(data.main.temp);
-				var min_temp=parseInt(data.main.temp_min);
-				var max_temp=parseInt(data.main.temp_max);
+				// var min_temp=parseInt(data.main.temp_min);
+				// var max_temp=parseInt(data.main.temp_max);
 				
 				returnObj= {
 					"iconClass" : iconClass,
 					"cityName" : data.name,
 					"weatherDesc" : data.weather[0].main,
-					"cur_temp" : cur_temp,
-					"min_temp" : min_temp,
-					"max_temp" : max_temp
+					"cur_temp" : cur_temp
+					// "min_temp" : min_temp,
+					// "max_temp" : max_temp
 				};
 				chromeLocalStorage.weatherData=JSON.stringify(returnObj);
 				chromeLocalStorage.weatherTimestamp=Date.now();
 				callbackFunction(returnObj);	
 			});
 		}
-	};
+	}
 
 
 	var removeSite = function(url) {
@@ -170,29 +173,29 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 var setWeather = function (weatherObj) {
 	var user_preffered_unit = elegantNewTabApp.getWeatherUnit();
 	var cur_temp = weatherObj.cur_temp;
-	var min_temp = weatherObj.min_temp;
-	var max_temp = weatherObj.max_temp;
+	// var min_temp = weatherObj.min_temp;
+	// var max_temp = weatherObj.max_temp;
 
-	if(user_preffered_unit=="F") {
-		cur_temp=(weatherObj.cur_temp-273.15)* 1.8000 + 32.00;
-		min_temp=(weatherObj.min_temp-273.15)* 1.8000 + 32.00;
-		max_temp=(weatherObj.max_temp-273.15)* 1.8000 + 32.00;
+	if(user_preffered_unit=="Fahrenheit") {
+		cur_temp=(weatherObj.cur_temp-273)* 1.8 + 32.0;
+		// min_temp=(weatherObj.min_temp-273)* 1.8 + 32.0;
+		// max_temp=(weatherObj.max_temp-273)* 1.8 + 32.0;
 	}
-	else if(user_preffered_unit=="C") {
-		cur_temp-=273.15;
-		min_temp-=273.15;
-		max_temp-=273.15;
+	else if(user_preffered_unit=="Celcius") {
+		cur_temp-=273;
+		// min_temp-=273;
+		// max_temp-=273;
 	}
 	cur_temp=parseInt(cur_temp);
-	min_temp=parseInt(min_temp);
-	max_temp=parseInt(max_temp);
+	// min_temp=parseInt(min_temp);
+	// max_temp=parseInt(max_temp);
 
 	$("#weather").addClass(weatherObj.iconClass);
 	$("#loc").html(weatherObj.cityName);
 	$("#cond").html(weatherObj.weatherDesc);
 	$("#curr").html(cur_temp);
-	$("#min").html(min_temp);
-	$("#max").html(max_temp);
+	// $("#min").html(min_temp);
+	// $("#max").html(max_temp);
 	$("#thermo").html(elegantNewTabApp.getWeatherUnit());
 }
 
@@ -241,17 +244,17 @@ $(document).ready(function(){
 
 	$("#weatherInfo").on("click", function(){
 		var unit=elegantNewTabApp.getWeatherUnit();
-		if(unit=="K") {
-			unit="C";
-			elegantNewTabApp.setWeatherUnit("C");
+		if(unit=="Kelvin") {
+			unit="Celcius";
+			elegantNewTabApp.setWeatherUnit("Celcius");
 		}
-		else if(unit=="C") {
-			unit="F";
-			elegantNewTabApp.setWeatherUnit("F");
+		else if(unit=="Celcius") {
+			unit="Fahrenheit";
+			elegantNewTabApp.setWeatherUnit("Fahrenheit");
 		}
 		else {
-			unit="K";
-			elegantNewTabApp.setWeatherUnit("K");
+			unit="Kelvin";
+			elegantNewTabApp.setWeatherUnit("Kelvin");
 		}
 		getAndSetWeather(true);
 	});

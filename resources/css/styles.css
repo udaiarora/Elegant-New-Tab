@@ -20,6 +20,10 @@ html {
 	display: inline-block;
 }
 
+.pull-left {
+	float: left;
+}
+
 .hidden {
 	display: none;
 }
@@ -94,9 +98,15 @@ html {
 }
 
 #search-bar {
-	width: 100%;
+	padding: 10px;
+	width: -webkit-calc(100% - 20px);
 	font-size: 20px;
 	color: #222;
+	background: url("http://1x1px.me/AAAAAA-0.5.png");
+}
+
+#search-bar:focus {
+	background: url("http://1x1px.me/AAAAAA-0.5.png");
 }
 
 
@@ -188,11 +198,24 @@ html {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.favico-text-small {
-	width: 38px;
+.favico-text-large {
+	height: 50px;
+	width: auto;
+	font-size: 50px;
+}
+
+.forecast-text {
+	font-size: 20px;
+	height: 20px;
+	text-align: right;
+	position: absolute;
+	right: 20px;
 }
 
 .favico-text-smaller {
 	margin-left: 2px;
-	width: 20px;
+	width: auto;
+	/*float: right;*/
+	font-size: 10px;
+
 }
