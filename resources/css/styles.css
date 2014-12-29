@@ -1,6 +1,6 @@
 /*Global*/
 html {
-	min-height: 650px;
+	min-height: 640px;
 	min-width: 900px;
 }
 
@@ -39,11 +39,12 @@ html {
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
+	z-index: -1;
 }
 
 .overlay {
 	/*background-image: linear-gradient(160deg,#e0be00,#dc4225);*/
-	background-image: linear-gradient(160deg,#11126B,#AA131C);
+	background-image: linear-gradient(160deg,#AA131C,#11126B);
 	opacity: 0.3;
 }
 
@@ -88,6 +89,24 @@ html {
 
 
 
+/*Quote*/
+
+.quote-container {
+	margin-left: 25%;
+	/*margin-top: 50px;*/
+	width: 50%;
+	text-align: center;
+}
+
+.quote {
+	padding: 10px;
+	background: url("http://1x1px.me/AAAAAA-0.5.png");
+	text-align: center;
+}
+
+
+
+
 /*Search*/
 .search-container {
 	/*position: relative;*/
@@ -100,7 +119,7 @@ html {
 #search-bar {
 	padding: 10px;
 	width: -webkit-calc(100% - 20px);
-	font-size: 20px;
+	font-size: 16px;
 	color: #222;
 	background: url("http://1x1px.me/AAAAAA-0.5.png");
 }
@@ -169,17 +188,6 @@ html {
 	0% { }
 	100% { -webkit-transform: translateY(0); transform: translateY(0); opacity: 0.72; }
 }
-
-/*.top-site-overlay {
-	position:absolute; 
-	z-index: -1;
-	top:0px;
-	bottom:0px;
-	left: 0px;
-	right: 0px;
-	display:inline-block;
-	opacity: 0.4;
-}*/
 
 .favico {
 	height:20px;

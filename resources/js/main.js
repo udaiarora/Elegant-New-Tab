@@ -1,7 +1,5 @@
  // 'use strict';
 
- //Globals
-
 var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
 	if(!chromeLocalStorage.removedSites) {
@@ -22,6 +20,30 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 			var imgUrl= "http://www.bing.com"+data.images[0].url;
 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
 		});
+	};
+
+	var getQuote= function() {
+		var timestamp= chromeLocalStorage.quoteTimestamp;
+		
+		//If cached weather is less than 300 mins old
+		if(timestamp && timestamp>Date.now()-18000000 && chromeLocalStorage.quote) {
+			return chromeLocalStorage.quote;
+		}
+
+		else {
+			$.ajax({
+			url: 'http://api.theysaidso.com/qod.json',
+			data: {
+				maxlength: 100
+			}
+			}).success(function(quoteJson) {
+				var q='"'+quoteJson.contents.quote+'" -'+quoteJson.contents.author;
+				chromeLocalStorage.quote=q;
+				chromeLocalStorage.quoteTimestamp=Date.now();
+				return q;
+			});
+		}
+		
 	};
 
 	var getWeatherUnit = function() {
@@ -71,8 +93,6 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
 	var getAndSetWeatherWithLocation= function (location, callbackFunction, cached) {
 		console.log(location);
-		//40.3247917,-74.55568219999999
-		// "http://maps.googleapis.com/maps/api/geocode/json?latlng="++"&sensor=true"
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
 		//If cached weather is less than 30 mins old
@@ -97,16 +117,12 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 				sunset=data.sys.susnet;
 				var iconClass= getWeatherIcon(weatherCode, sunset);
 				var cur_temp=parseInt(data.main.temp);
-				// var min_temp=parseInt(data.main.temp_min);
-				// var max_temp=parseInt(data.main.temp_max);
 				
 				returnObj= {
 					"iconClass" : iconClass,
 					"cityName" : data.name,
 					"weatherDesc" : data.weather[0].main,
 					"cur_temp" : cur_temp
-					// "min_temp" : min_temp,
-					// "max_temp" : max_temp
 				};
 				chromeLocalStorage.weatherData=JSON.stringify(returnObj);
 				chromeLocalStorage.weatherTimestamp=Date.now();
@@ -120,7 +136,6 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 		var arr=JSON.parse(chromeLocalStorage.getItem("removedSites"));
 		arr.push(url);
 		chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
-		// chromeLocalStorage.removedSites='{"removed":"'+str.substring(0,str.length)+'"}';
 		chrome.topSites.get(elegantNewTabApp.showTopSites);
 	}
 
@@ -138,15 +153,9 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 				var tmp = document.createElement ('a');
 				tmp.href = d[i].url;
 				var arr = tmp.hostname.split(".");
-				// var logoUrl="http://data.scrapelogo.com/"+arr[arr.length-2]+"."+arr[arr.length-1]+"/nlogo";
-				// var logoUrl="http://"+arr[arr.length-2]+"."+arr[arr.length-1]+"/favicon.ico";
 				var logoUrl = "chrome://favicon/http://"+tmp.hostname;
 				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
-
-				// document.querySelector("#top").innerHTML="<img src="+logoUrl+"/>"
-
 				top.innerHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default animate-up'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
-				//<div style='background-image: linear-gradient(160deg,#1111aa,blue);' class='top-site-overlay'>&nbsp;</div>	
 			}
 
 			i++;
@@ -156,6 +165,7 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
 	return {
 		setPageBG:setPageBG,
+		getQuote:getQuote,
 		getAndSetWeatherWithLocation:getAndSetWeatherWithLocation,
 		getWeatherUnit:getWeatherUnit,
 		setWeatherUnit:setWeatherUnit,
@@ -173,29 +183,19 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 var setWeather = function (weatherObj) {
 	var user_preffered_unit = elegantNewTabApp.getWeatherUnit();
 	var cur_temp = weatherObj.cur_temp;
-	// var min_temp = weatherObj.min_temp;
-	// var max_temp = weatherObj.max_temp;
 
 	if(user_preffered_unit=="Fahrenheit") {
 		cur_temp=(weatherObj.cur_temp-273)* 1.8 + 32.0;
-		// min_temp=(weatherObj.min_temp-273)* 1.8 + 32.0;
-		// max_temp=(weatherObj.max_temp-273)* 1.8 + 32.0;
 	}
 	else if(user_preffered_unit=="Celcius") {
 		cur_temp-=273;
-		// min_temp-=273;
-		// max_temp-=273;
 	}
 	cur_temp=parseInt(cur_temp);
-	// min_temp=parseInt(min_temp);
-	// max_temp=parseInt(max_temp);
 
 	$("#weather").addClass(weatherObj.iconClass);
 	$("#loc").html(weatherObj.cityName);
 	$("#cond").html(weatherObj.weatherDesc);
 	$("#curr").html(cur_temp);
-	// $("#min").html(min_temp);
-	// $("#max").html(max_temp);
 	$("#thermo").html(elegantNewTabApp.getWeatherUnit());
 }
 
@@ -217,8 +217,13 @@ $(document).ready(function(){
 	//Focus on the Search Bar
 	document.querySelector("#search-bar").focus();
 
-	//GET image URL from Bing for the picture of the day.
+	//Get image URL from Bing for the picture of the day.
 	elegantNewTabApp.setPageBG();
+
+	//Get Quote of the day
+	var quote = elegantNewTabApp.getQuote();
+	console.log(quote)
+	$("#search-bar").attr('placeholder','Google Search | '+quote);
 
 	//Get Top Sites of Chrome
 	chrome.topSites.get(elegantNewTabApp.showTopSites);
@@ -226,9 +231,6 @@ $(document).ready(function(){
 	//Get Geolocation for Weather
 	getAndSetWeather(true);
 
-
-
-	
 
 	$("body").on("click", function(){
 		document.querySelector("#search-bar").focus();
