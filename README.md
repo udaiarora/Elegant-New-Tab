@@ -7,6 +7,7 @@ A better New Tab for Chrome. <br><br>
 - A new Quote everyday <br>
 - Weather (With animated icons)<br>
 - Top Sites <br>
+- Fast! <br>
 - More Coming Soom <br><br>
 
 First Public Beta to be released in early January 2015 <br><br>

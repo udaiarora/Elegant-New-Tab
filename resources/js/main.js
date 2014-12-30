@@ -75,7 +75,7 @@
 			return "snowy";
 		}
 		if(sunny.indexOf(weatherCode)>-1) {
-			if(Date.now()<sunset) {
+			if(Date.now()/1000<sunset) {
 				return "sunny";
 			}
 			return "starry";
@@ -95,7 +95,7 @@
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
 		//If cached weather is less than 30 mins old
-		if(timestamp && timestamp>Date.now()-1800000 && chromeLocalStorage.weatherData && cached) {
+		if(timestamp && Date.now()-timestamp>1800000 && chromeLocalStorage.weatherData && cached) {
 			callbackFunction(JSON.parse(chromeLocalStorage.weatherData));
 		}
 
@@ -111,9 +111,8 @@
 					lon: location.coords.longitude
 				}
 			}).success(function (data){
-				console.log(data)
 				weatherCode=data.weather[0].id;
-				sunset=data.sys.susnet;
+				sunset=data.sys.sunset;
 				var iconClass= getWeatherIcon(weatherCode, sunset);
 				var cur_temp=parseInt(data.main.temp);
 				
@@ -243,6 +242,7 @@ $(document).ready(function(){
 
 
 	$("body").on("click", function(){
+		$("#optionsMenu").addClass("hidden");
 		document.querySelector("#search-bar").focus();
 	});
 
@@ -277,9 +277,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$(".apps").on("click", function() {
-		chrome.tabs.create({url:'chrome://apps/'})
-	})
+
 
 	// Handle Removing a Top site
 	$("body").on("mouseover", ".top-site", function(){
@@ -296,16 +294,37 @@ $(document).ready(function(){
 		elegantNewTabApp.removeSite($(this).data("link"));
 	});
 
+
+
 	//Settings
-	$(".settings").on("click", function(){
+	$(".settings").on("click", function(e){
 		$("#optionsMenu").toggleClass("hidden");
+		e.stopPropagation();
 	});
 
-	$("#restore").on("click", function(){
-		delete localStorage.removedSites;
+	$("#restore").on("click", function(e){
+		var arr=[];
+ 		localStorage.setItem("removedSites", JSON.stringify(arr));
 		chrome.topSites.get(elegantNewTabApp.showTopSites);
+		e.stopPropagation();
+	});
 
-	})
+	$(".apps").on("click", function() {
+		chrome.tabs.create({url:'chrome://apps/'})
+	});
+
+	$(".history").on("click", function() {
+		chrome.tabs.create({url:'chrome://history/'})
+	});
+
+	$("#like").on("click", function() {
+		chrome.tabs.create({url:'https://www.facebook.com/ElegantNewTab'})
+	});
+
+	$("#developer").on("click", function() {
+		chrome.tabs.create({url:'http://www.udaiarora.com'})
+	});
+
 
 	console.log("Developed by Udai Arora http://www.udaiarora.com")
 
