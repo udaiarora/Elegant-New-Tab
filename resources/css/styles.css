@@ -4,7 +4,9 @@ html {
 	min-width: 900px;
 }
 
-
+::-webkit-input-placeholder {
+   color: #444;
+}
 
 
 /*Over-ride*/
@@ -34,7 +36,7 @@ html {
 
 .bg, .overlay {
 	position: absolute;
-	-webkit-filter: blur(3px);
+	-webkit-filter: blur(6px);
 	top: 0px;
 	bottom: 0px;
 	left: 0px;
@@ -44,7 +46,8 @@ html {
 
 .overlay {
 	/*background-image: linear-gradient(160deg,#e0be00,#dc4225);*/
-	background-image: linear-gradient(160deg,#AA131C,#11126B);
+	/*background-image: linear-gradient(160deg,#AA131C,#11126B);*/
+	background-image: linear-gradient(200deg,#6A131C,#41126B);
 	opacity: 0.3;
 }
 
@@ -86,30 +89,14 @@ html {
 	margin-left: -210px;
 }
 
-
-
-
-/*Quote*/
-
-.quote-container {
-	margin-left: 25%;
-	/*margin-top: 50px;*/
-	width: 50%;
-	text-align: center;
+.weather-info-button {
+	opacity: 0.72;
 }
-
-.quote {
-	padding: 10px;
-	background: url("http://1x1px.me/AAAAAA-0.5.png");
-	text-align: center;
-}
-
-
 
 
 /*Search*/
 .search-container {
-	/*position: relative;*/
+	position: relative;
 	margin-left: 25%;
 	margin-top: 20px;
 	width: 50%;
@@ -117,15 +104,18 @@ html {
 }
 
 #search-bar {
-	padding: 10px;
+	padding: 10px 10px 10px 40px;
 	width: -webkit-calc(100% - 20px);
 	font-size: 16px;
 	color: #222;
-	background: url("http://1x1px.me/AAAAAA-0.5.png");
+	background: url("/resources/images/AAAAAA-0.72.png");
 }
 
-#search-bar:focus {
-	background: url("http://1x1px.me/AAAAAA-0.5.png");
+.search-icon {
+	position: absolute;
+	left: 10px;
+	top: 11px;
+	height: 24px;
 }
 
 

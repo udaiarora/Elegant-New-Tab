@@ -1,30 +1,30 @@
  // 'use strict';
 
-var elegantNewTabApp=(function($, document, chromeLocalStorage) {
+ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
-	if(!chromeLocalStorage.removedSites) {
-		var arr=[];
-		chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
-	}
+ 	if(!chromeLocalStorage.removedSites) {
+ 		var arr=[];
+ 		chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
+ 	}
 
-	var setPageBG= function (){
-		$.ajax({
-			url: 'http://www.bing.com/HPImageArchive.aspx',
-			data: {
-				format: "js",
-				idx: "0",
-				n: "1",
-				mkt: "en-US"
-			}
-		}).success(function(data){
-			var imgUrl= "http://www.bing.com"+data.images[0].url;
-			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
-		});
-	};
+ 	var setPageBG= function (){
+ 		$.ajax({
+ 			url: 'http://www.bing.com/HPImageArchive.aspx',
+ 			data: {
+ 				format: "js",
+ 				idx: "0",
+ 				n: "1",
+ 				mkt: "en-US"
+ 			}
+ 		}).success(function(data){
+ 			var imgUrl= "http://www.bing.com"+data.images[0].url;
+ 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+ 		});
+ 	};
 
-	var getQuote= function() {
-		var timestamp= chromeLocalStorage.quoteTimestamp;
-		
+ 	var getQuote= function() {
+ 		var timestamp= chromeLocalStorage.quoteTimestamp;
+
 		//If cached weather is less than 300 mins old
 		if(timestamp && timestamp>Date.now()-18000000 && chromeLocalStorage.quote) {
 			return chromeLocalStorage.quote;
@@ -32,10 +32,10 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 
 		else {
 			$.ajax({
-			url: 'http://api.theysaidso.com/qod.json',
-			data: {
-				maxlength: 100
-			}
+				url: 'http://api.theysaidso.com/qod.json',
+				data: {
+					maxlength: 100
+				}
 			}).success(function(quoteJson) {
 				var q='"'+quoteJson.contents.quote+'" -'+quoteJson.contents.author;
 				chromeLocalStorage.quote=q;
@@ -61,8 +61,8 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 		var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
 		var thunderstorm = [210,211,212,221,230,231,232,956,957,958,959,960,961,962];
 		var snow= [600,601,602,611,612,615,616,620,621,622,906];
-		var sunny = [800,801,802];
-		var clouds= [803,804,900,901,902,905];
+		var sunny = [800,801];
+		var clouds= [802,803,804,900,901,902,905];
 		var rainbow = [951,952,953,954,955];
 		var haze = [701,711,721,731,741,751,761,762,771,781];
 		if(rain.indexOf(weatherCode)>-1) {
@@ -92,7 +92,6 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 	};
 
 	var getAndSetWeatherWithLocation= function (location, callbackFunction, cached) {
-		console.log(location);
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
 		//If cached weather is less than 30 mins old
@@ -106,11 +105,11 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 			var weatherCode;
 			var sunset;
 			$.ajax({
-			url: "http://api.openweathermap.org/data/2.5/weather",
-			data: {
-				lat: location.coords.latitude,
-				lon: location.coords.longitude
-			}
+				url: "http://api.openweathermap.org/data/2.5/weather",
+				data: {
+					lat: location.coords.latitude,
+					lon: location.coords.longitude
+				}
 			}).success(function (data){
 				console.log(data)
 				weatherCode=data.weather[0].id;
@@ -146,6 +145,7 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 		while(counter<12 && d[i]) {
 			var top = document.querySelector("#top .row"+parseInt(counter/3));
 			if(counter%3==0) {
+				var topSiteHTML="";
 				top.innerHTML="";
 			}
 			if(arrObj.indexOf(d[i].url)<0) {
@@ -155,11 +155,20 @@ var elegantNewTabApp=(function($, document, chromeLocalStorage) {
 				var arr = tmp.hostname.split(".");
 				var logoUrl = "chrome://favicon/http://"+tmp.hostname;
 				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
-				top.innerHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default animate-up'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
+				topSiteHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default top-site-animate'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
 			}
-
+			if(counter%3==0) {
+				top.innerHTML=topSiteHTML;
+			}
 			i++;
 		}
+		
+		$(".top-site-animate").each(function(index){
+			var that=$(this);
+			setTimeout(function() {
+				that.addClass("animate-up");
+			}, 50*index);
+		})
 	};
 
 
@@ -222,8 +231,9 @@ $(document).ready(function(){
 
 	//Get Quote of the day
 	var quote = elegantNewTabApp.getQuote();
-	console.log(quote)
-	$("#search-bar").attr('placeholder','Google Search | '+quote);
+	if(quote) {
+		$("#search-bar").attr('placeholder','Google Search | '+quote);	
+	}
 
 	//Get Top Sites of Chrome
 	chrome.topSites.get(elegantNewTabApp.showTopSites);
@@ -282,6 +292,7 @@ $(document).ready(function(){
 		elegantNewTabApp.removeSite($(this).data("link"));
 	});
 
+	console.log("Developed by Udai Arora http://www.udaiarora.com")
 
 
 });
