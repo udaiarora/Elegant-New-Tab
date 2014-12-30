@@ -277,6 +277,10 @@ $(document).ready(function(){
 		}
 	});
 
+	$(".apps").on("click", function() {
+		chrome.tabs.create({url:'chrome://apps/'})
+	})
+
 	// Handle Removing a Top site
 	$("body").on("mouseover", ".top-site", function(){
 		$(this).find(".close").removeClass("hidden");
@@ -291,6 +295,17 @@ $(document).ready(function(){
 		e.preventDefault();
 		elegantNewTabApp.removeSite($(this).data("link"));
 	});
+
+	//Settings
+	$(".settings").on("click", function(){
+		$("#optionsMenu").toggleClass("hidden");
+	});
+
+	$("#restore").on("click", function(){
+		delete localStorage.removedSites;
+		chrome.topSites.get(elegantNewTabApp.showTopSites);
+
+	})
 
 	console.log("Developed by Udai Arora http://www.udaiarora.com")
 

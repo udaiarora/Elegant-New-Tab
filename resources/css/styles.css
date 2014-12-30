@@ -71,6 +71,39 @@ html {
 
 
 
+/*Settings*/
+.options {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+.apps, .settings, .history {
+	height: 27px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.options ul {
+	position: absolute;
+	right: 0px;
+}
+.options ul li {
+	/*display: block;*/
+	width:220px;
+	padding: 8px;
+	background: rgba(200,200,200,0.5);
+	cursor: pointer;
+	border-bottom: 1px solid #ababab;
+}
+
+.options ul li:hover {
+	opacity: 0.9;
+}
+
+
+
+
 /*Weather*/
 .weather-container {
 	position: relative;
@@ -105,7 +138,7 @@ html {
 
 #search-bar {
 	padding: 10px 10px 10px 40px;
-	width: -webkit-calc(100% - 20px);
+	width: -webkit-calc(100% - 50px);
 	font-size: 16px;
 	color: #222;
 	background: url("/resources/images/AAAAAA-0.72.png");
