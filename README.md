@@ -1,8 +1,7 @@
-<h2>Elegant-New-Tab <br>
-===============</h2>
+<h2>Elegant-New-Tab</h2><br>
 
-A better New Tab for Chrome. <br>
-<b>Features</b> <br>
+A better New Tab for Chrome. <br><br>
+<b>Features</b><br>
 - Inspired by Material Design <br>
 - A new background everyday <br>
 - A new Quote everyday <br>
