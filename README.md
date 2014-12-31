@@ -13,6 +13,8 @@ A better New Tab for Chrome. <br><br>
 - A new Quote everyday <br>
 - Weather (With animated icons)<br>
 - Top Sites <br>
+- Runs Offline <br>
+- Open Source <br>
 - Fast! <br>
 - More Coming Soom <br><br>
 
