@@ -2,6 +2,12 @@
 
 A better New Tab for Chrome. <br><br>
 <b>Features</b><br>
+<img src="/screens/1.png" alt="ScreenShot"><br>
+<img src="/screens/2.png" alt="ScreenShot"><br>
+<img src="/screens/3.png" alt="ScreenShot"><br>
+<img src="/screens/b1.png" alt="ScreenShot"><br>
+<img src="/screens/b2.png" alt="ScreenShot"><br>
+<b>Features</b><br>
 - Inspired by Material Design <br>
 - A new background everyday <br>
 - A new Quote everyday <br>
