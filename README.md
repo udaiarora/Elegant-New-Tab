@@ -1,12 +1,12 @@
 <h2>Elegant-New-Tab</h2><br>
 
 A better New Tab for Chrome. <br><br>
-<b>Features</b><br>
-<img src="/screens/1.png" alt="ScreenShot"><br>
-<img src="/screens/2.png" alt="ScreenShot"><br>
-<img src="/screens/3.png" alt="ScreenShot"><br>
-<img src="/screens/b1.png" alt="ScreenShot"><br>
-<img src="/screens/b2.png" alt="ScreenShot"><br>
+<b>Screenshots</b><br>
+<img src="https://raw.githubusercontent.com/udaiarora/Elegant-New-Tab/master/Screens/1.png" alt="ScreenShot"><br>
+<img src="https://raw.githubusercontent.com/udaiarora/Elegant-New-Tab/master/Screens/2.png" alt="ScreenShot"><br>
+<img src="https://raw.githubusercontent.com/udaiarora/Elegant-New-Tab/master/Screens/3.png" alt="ScreenShot"><br>
+<img src="https://raw.githubusercontent.com/udaiarora/Elegant-New-Tab/master/Screens/b1.png" alt="ScreenShot"><br>
+<img src="https://raw.githubusercontent.com/udaiarora/Elegant-New-Tab/master/Screens/b2.png" alt="ScreenShot"><br>
 <b>Features</b><br>
 - Inspired by Material Design <br>
 - A new background everyday <br>
