@@ -19,6 +19,9 @@
  		}).success(function(data){
  			var imgUrl= "http://www.bing.com"+data.images[0].url;
  			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+ 		}).error(function(data){
+ 			var imgUrl= "/resources/images/default-background.jpg";
+ 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
  		});
  	};
 
