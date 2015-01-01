@@ -1,0 +1,25 @@
+{
+	"manifest_version": 2,
+	"name": "Elegant New Tab",
+	"description": "A better New Tab",
+	"version": "1.0.2",
+	"chrome_url_overrides" : {
+		"newtab": "/views/ent.html"
+	},
+	"icons": {
+		"16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+
+	"permissions": [
+        "http://*/*",
+        "https://*/*",
+        "chrome://favicon/",
+        "topSites",
+        "tabs",
+        "geolocation",
+        "unlimitedStorage",
+        "notifications"
+	]
+}
