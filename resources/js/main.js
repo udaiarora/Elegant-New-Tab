@@ -60,7 +60,7 @@
 		chromeLocalStorage.unit=unitToBeSet;
 	}
 
-	var getWeatherIcon= function (weatherCode, sunset) {
+	var getWeatherIcon= function (weatherCode, sunset, sunrise) {
 		var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
 		var thunderstorm = [210,211,212,221,230,231,232,956,957,958,959,960,961,962];
 		var snow= [600,601,602,611,612,615,616,620,621,622,906];
@@ -78,7 +78,7 @@
 			return "snowy";
 		}
 		if(sunny.indexOf(weatherCode)>-1) {
-			if(Date.now()/1000<sunset) {
+			if(Date.now()/1000<sunset && Date.now()/1000>sunrise) {
 				return "sunny";
 			}
 			return "starry";
@@ -107,6 +107,7 @@
 			var returnObj;
 			var weatherCode;
 			var sunset;
+			var sunrise;
 			$.ajax({
 				url: "http://api.openweathermap.org/data/2.5/weather",
 				data: {
@@ -116,7 +117,8 @@
 			}).success(function (data){
 				weatherCode=data.weather[0].id;
 				sunset=data.sys.sunset;
-				var iconClass= getWeatherIcon(weatherCode, sunset);
+				sunrise=data.sys.sunrise;
+				var iconClass= getWeatherIcon(weatherCode, sunset, sunrise);
 				var cur_temp=parseInt(data.main.temp);
 				
 				returnObj= {
@@ -144,6 +146,9 @@
 		var arrObj= JSON.parse(chromeLocalStorage.getItem("removedSites"));
 		var i=0;
 		var counter=0;
+		for(var k=0;k<4;k++) {
+			document.querySelector("#top .row"+parseInt(k)).innerHTML="";
+		}
 		while(counter<12 && d[i]) {
 			var top = document.querySelector("#top .row"+parseInt(counter/3));
 			if(counter%3==0) {
@@ -155,14 +160,16 @@
 				var tmp = document.createElement ('a');
 				tmp.href = d[i].url;
 				var arr = tmp.hostname.split(".");
-				var logoUrl = "chrome://favicon/http://"+tmp.hostname;
+				// var logoUrl = "chrome://favicon/http://"+tmp.hostname;
+				var logoUrl = "http://www.google.com/s2/favicons?domain=http://"+tmp.hostname;
 				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
+				console.log(logoUrl)
 				topSiteHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default top-site-animate'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
 			}
-			if(counter%3==0) {
+			i++;
+			if(counter%3==0 || !d[i] || counter==12) {
 				top.innerHTML=topSiteHTML;
 			}
-			i++;
 		}
 		
 		$(".top-site-animate").each(function(index){
@@ -234,7 +241,7 @@ $(document).ready(function(){
 	//Get Quote of the day
 	var quote = elegantNewTabApp.getQuote();
 	if(quote) {
-		$("#search-bar").attr('placeholder','Google Search | '+quote);	
+		$("#search-bar").attr('placeholder','Google Search | '+quote).attr('title',quote);	
 	}
 
 	//Get Top Sites of Chrome

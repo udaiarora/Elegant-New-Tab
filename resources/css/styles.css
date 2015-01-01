@@ -53,6 +53,7 @@ html {
 
 .main-content {
 	z-index: 999;
+	margin-top: 100px;
 }
 
 
@@ -115,7 +116,8 @@ html {
 
 .weather-text-container {
 	position: absolute;
-	top: -40px; 
+	top: -40px;
+	width: 310px;
 }
 
 #weather {

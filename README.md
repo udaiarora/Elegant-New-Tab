@@ -16,7 +16,7 @@ A better New Tab for Chrome. <br><br>
 - Runs Offline <br>
 - Open Source <br>
 - Fast! <br>
-- More Coming Soom <br><br>
+- More Coming Soon <br><br>
 
 First Public Beta to be released in early January 2015 <br><br>
 <b>Installation Instructions </b><br>
