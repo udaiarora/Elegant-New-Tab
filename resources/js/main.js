@@ -28,8 +28,8 @@
  	var getQuote= function() {
  		var timestamp= chromeLocalStorage.quoteTimestamp;
 
-		//If cached quote is less than 30 mins old
-		if(timestamp && timestamp>Date.now()-1800000 && chromeLocalStorage.quote) {
+		//If cached quote is less than 1 mins old
+		if(timestamp && timestamp>Date.now()-60000 && chromeLocalStorage.quote) {
 			return chromeLocalStorage.quote;
 		}
 
