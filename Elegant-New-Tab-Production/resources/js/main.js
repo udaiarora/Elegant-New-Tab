@@ -1,6 +1,21 @@
  // 'use strict';
 
  var elegantNewTabApp=(function($, document, chromeLocalStorage) {
+	
+	//Utility Function
+	function getBase64Image(img) {
+	    var canvas = document.createElement("canvas");
+	    canvas.width = img.width;
+	    canvas.height = img.height;
+	    // Copy the image contents to the canvas
+	    var ctx = canvas.getContext("2d");
+	    ctx.drawImage(img, 0, 0);
+	    // Get the data-URL formatted image
+	    // Firefox supports PNG and JPEG. You could check img.src to guess the
+	    // original format, but be aware the using "image/jpg" will re-encode the image.
+	    var dataURL = canvas.toDataURL("image/png");
+	    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+	}
 
  	if(!chromeLocalStorage.removedSites) {
  		var arr=[];
@@ -8,7 +23,16 @@
  	}
 
  	var setPageBG= function (){
- 		$.ajax({
+ 		var timestamp= chromeLocalStorage.bgTimestamp;
+ 		//5 Hours old
+ 		if(timestamp && timestamp>Date.now()-18000000 && chromeLocalStorage.bgimage) {
+ 			var dataImage = chromeLocalStorage.getItem('bgimage');
+			document.querySelector(".bg").style.backgroundImage="url("+"data:image/png;base64," + dataImage+")";
+			console.log("local")
+ 		}
+ 		else {
+ 			console.log("ajax")
+ 			$.ajax({
  			url: 'http://www.bing.com/HPImageArchive.aspx',
  			data: {
  				format: "js",
@@ -16,22 +40,33 @@
  				n: "1",
  				mkt: "en-US"
  			}
- 		}).success(function(data){
- 			var imgUrl= "http://www.bing.com"+data.images[0].url;
- 			var img = new Image();
- 			img.id="te";
- 			img.src=imgUrl;
- 			img.onload=function(){
- 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
- 			}
-  			img.onerror=function(){
- 				var imgUrl= "/resources/images/default-background.jpg";
- 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
- 			}
- 		}).error(function(data){
- 			var imgUrl= "/resources/images/default-background.jpg";
- 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
- 		});
+	 		}).success(function(data){
+	 			var imgUrl= "http://www.bing.com"+data.images[0].url;
+	 			var img = new Image();
+	 			img.src=imgUrl;
+	 			img.onload=function(){
+	 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+	 				bannerImage = document.getElementById('bannerImg');
+					imgData = getBase64Image(img);
+					chromeLocalStorage.setItem("bgimage", imgData);
+	 			}
+	  			img.onerror=function(){
+	 				var imgUrl= "/resources/images/default-background.jpg";
+	 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+	 				delete chromeLocalStorage.bgimage;
+	 			}
+	 			chromeLocalStorage.bgTimestamp=Date.now();
+
+	 		}).error(function(data){
+	 			var imgUrl= "/resources/images/default-background.jpg";
+	 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+	 		});
+
+	 		
+
+ 		}
+
+ 		
  	};
 
  	var getQuote= function() {
