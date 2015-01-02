@@ -27,5 +27,5 @@ First Public Beta to be released in early January 2015 <br><br>
 <b>Credits</b> <br>
 Weather Animations: Fabrizio Bianchi's Code Pen <br>
 Material Design: https://github.com/FezVrasta/bootstrap-material-design <br>
-Quote: theysaidso <br>
+Quote: iheartquotes <br>
 Picture of the day: Bing <br>
