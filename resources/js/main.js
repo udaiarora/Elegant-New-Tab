@@ -28,19 +28,20 @@
  	var getQuote= function() {
  		var timestamp= chromeLocalStorage.quoteTimestamp;
 
-		//If cached weather is less than 300 mins old
-		if(timestamp && timestamp>Date.now()-18000000 && chromeLocalStorage.quote) {
+		//If cached quote is less than 30 mins old
+		if(timestamp && timestamp>Date.now()-1800000 && chromeLocalStorage.quote) {
 			return chromeLocalStorage.quote;
 		}
 
 		else {
 			$.ajax({
-				url: 'http://api.theysaidso.com/qod.json',
+				url: 'http://iheartquotes.com/api/v1/random',
 				data: {
-					maxlength: 100
+					format:"json",
+					max_characters: 60
 				}
 			}).success(function(quoteJson) {
-				var q='"'+quoteJson.contents.quote+'" -'+quoteJson.contents.author;
+				var q=quoteJson.quote;
 				chromeLocalStorage.quote=q;
 				chromeLocalStorage.quoteTimestamp=Date.now();
 				return q;
