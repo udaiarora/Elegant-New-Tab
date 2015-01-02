@@ -18,7 +18,16 @@
  			}
  		}).success(function(data){
  			var imgUrl= "http://www.bing.com"+data.images[0].url;
- 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+ 			var img = new Image();
+ 			img.id="te";
+ 			img.src=imgUrl;
+ 			img.onload=function(){
+ 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+ 			}
+  			img.onerror=function(){
+ 				var imgUrl= "/resources/images/default-background.jpg";
+ 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+ 			}
  		}).error(function(data){
  			var imgUrl= "/resources/images/default-background.jpg";
  			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
