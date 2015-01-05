@@ -28,10 +28,8 @@
  		if(timestamp && timestamp>Date.now()-18000000 && chromeLocalStorage.bgimage) {
  			var dataImage = chromeLocalStorage.getItem('bgimage');
 			document.querySelector(".bg").style.backgroundImage="url("+"data:image/png;base64," + dataImage+")";
-			console.log("local")
  		}
  		else {
- 			console.log("ajax")
  			$.ajax({
  			url: 'http://www.bing.com/HPImageArchive.aspx',
  			data: {
@@ -142,8 +140,8 @@
 	var getAndSetWeatherWithLocation= function (location, callbackFunction, cached) {
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
-		//If cached weather is less than 30 mins old
-		if(timestamp && Date.now()-timestamp>1800000 && chromeLocalStorage.weatherData && cached) {
+		//If cached weather is less than 15 mins old
+		if(timestamp && Date.now()-timestamp>900000 && chromeLocalStorage.weatherData && cached) {
 			callbackFunction(JSON.parse(chromeLocalStorage.weatherData));
 		}
 
@@ -208,7 +206,6 @@
 				// var logoUrl = "chrome://favicon/http://"+tmp.hostname;
 				var logoUrl = "http://www.google.com/s2/favicons?domain=http://"+tmp.hostname;
 				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
-				console.log(logoUrl)
 				topSiteHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default top-site-animate'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
 			}
 			i++;
@@ -255,7 +252,8 @@ var setWeather = function (weatherObj) {
 	}
 	cur_temp=parseInt(cur_temp);
 
-	$("#weather").addClass(weatherObj.iconClass);
+	$("#weather").removeClass();
+	$("#weather").addClass("inline-block").addClass(weatherObj.iconClass);
 	$("#loc").html(weatherObj.cityName);
 	$("#cond").html(weatherObj.weatherDesc);
 	$("#curr").html(cur_temp);

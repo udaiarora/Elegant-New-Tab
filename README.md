@@ -25,7 +25,7 @@ First Public Beta to be released in early January 2015 <br><br>
 3. Raise Bug Reports here : https://github.com/udaiarora/Elegant-New-Tab/issues <br><br>
 
 <b>Credits</b> <br>
-Weather Animations: Fabrizio Bianchi's Code Pen <br>
-Material Design: https://github.com/FezVrasta/bootstrap-material-design <br>
-Quote: iheartquotes <br>
-Picture of the day: Bing <br>
+Weather Animations inspired by Fabrizio Bianchi's Code Pen <br>
+Material Design from https://github.com/FezVrasta/bootstrap-material-design <br>
+Quote by iheartquotes <br>
+Picture of the day from Bing <br>
