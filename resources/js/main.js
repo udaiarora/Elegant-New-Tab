@@ -1,7 +1,7 @@
  // 'use strict';
 
  var elegantNewTabApp=(function($, document, chromeLocalStorage) {
-	
+
 	//Utility Function
 	function getBase64Image(img) {
 	    var canvas = document.createElement("canvas");
@@ -24,8 +24,8 @@
 
  	var setPageBG= function (){
  		var timestamp= chromeLocalStorage.bgTimestamp;
- 		//5 Hours old
- 		if(timestamp && timestamp>Date.now()-18000000 && chromeLocalStorage.bgimage) {
+ 		//30 min old
+ 		if(timestamp && timestamp>Date.now()-1800000 && chromeLocalStorage.bgimage && chromeLocalStorage.bgimage!="data:,") {
  			var dataImage = chromeLocalStorage.getItem('bgimage');
 			document.querySelector(".bg").style.backgroundImage="url("+"data:image/png;base64," + dataImage+")";
  		}
@@ -38,40 +38,28 @@
  				n: "1",
  				mkt: "en-US"
  			}
-	 		}).success(function(data){
+	 		}).done(function(data){
 	 			var imgUrl= "http://www.bing.com"+data.images[0].url;
 	 			var img = new Image();
 	 			img.src=imgUrl;
-	 			img.onload=function(){
-	 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
-	 				bannerImage = document.getElementById('bannerImg');
-					imgData = getBase64Image(img);
-					chromeLocalStorage.setItem("bgimage", imgData);
-	 			}
-	  			img.onerror=function(){
-	 				var imgUrl= "/resources/images/default-background.jpg";
-	 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
-	 				delete chromeLocalStorage.bgimage;
-	 			}
+ 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+ 				bannerImage = document.getElementById('bannerImg');
+				imgData = getBase64Image(img);
+				chromeLocalStorage.setItem("bgimage", imgData);
 	 			chromeLocalStorage.bgTimestamp=Date.now();
-
-	 		}).error(function(data){
+	 		}).fail(function(data){
 	 			var imgUrl= "/resources/images/default-background.jpg";
 	 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
 	 		});
 
-	 		
-
  		}
-
- 		
  	};
 
  	var getQuote= function() {
  		var timestamp= chromeLocalStorage.quoteTimestamp;
 
 		//If cached quote is less than 1 mins old
-		if(timestamp && timestamp>Date.now()-60000 && chromeLocalStorage.quote) {
+		if(timestamp && Date.now()-timestamp<60000 && chromeLocalStorage.quote) {
 			return chromeLocalStorage.quote;
 		}
 
@@ -141,12 +129,14 @@
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
 		//If cached weather is less than 15 mins old
-		if(timestamp && Date.now()-timestamp>900000 && chromeLocalStorage.weatherData && cached) {
+		if(cached && timestamp && Date.now()-timestamp<900000 && chromeLocalStorage.weatherData) {
+			console.log("Cached Weather")
 			callbackFunction(JSON.parse(chromeLocalStorage.weatherData));
 		}
 
 		//If cached weather is older than 30 mins
 		else {
+			console.log("AJAXED Weather")
 			var returnObj;
 			var weatherCode;
 			var sunset;
@@ -157,7 +147,8 @@
 					lat: location.coords.latitude,
 					lon: location.coords.longitude
 				}
-			}).success(function (data){
+			}).done(function (data){
+				console.log("Weather GET Success.")
 				weatherCode=data.weather[0].id;
 				sunset=data.sys.sunset;
 				sunrise=data.sys.sunrise;
@@ -173,6 +164,8 @@
 				chromeLocalStorage.weatherData=JSON.stringify(returnObj);
 				chromeLocalStorage.weatherTimestamp=Date.now();
 				callbackFunction(returnObj);	
+			}).fail(function(){
+				console.log(Date.now()-timestamp,"msg");
 			});
 		}
 	}
@@ -203,6 +196,7 @@
 				var tmp = document.createElement ('a');
 				tmp.href = d[i].url;
 				var arr = tmp.hostname.split(".");
+
 				// var logoUrl = "chrome://favicon/http://"+tmp.hostname;
 				var logoUrl = "http://www.google.com/s2/favicons?domain=http://"+tmp.hostname;
 				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
@@ -218,7 +212,7 @@
 			var that=$(this);
 			setTimeout(function() {
 				that.addClass("animate-up");
-			}, 50*index);
+			}, 70*index);
 		})
 	};
 
@@ -247,7 +241,7 @@ var setWeather = function (weatherObj) {
 	if(user_preffered_unit=="Fahrenheit") {
 		cur_temp=(weatherObj.cur_temp-273)* 1.8 + 32.0;
 	}
-	else if(user_preffered_unit=="Celcius") {
+	else if(user_preffered_unit=="Celsius") {
 		cur_temp-=273;
 	}
 	cur_temp=parseInt(cur_temp);
@@ -278,8 +272,6 @@ $(document).ready(function(){
 	//Focus on the Search Bar
 	document.querySelector("#search-bar").focus();
 
-	//Get image URL from Bing for the picture of the day.
-	elegantNewTabApp.setPageBG();
 
 	//Get Quote of the day
 	var quote = elegantNewTabApp.getQuote();
@@ -310,10 +302,10 @@ $(document).ready(function(){
 	$("#weatherInfo").on("click", function(){
 		var unit=elegantNewTabApp.getWeatherUnit();
 		if(unit=="Kelvin") {
-			unit="Celcius";
-			elegantNewTabApp.setWeatherUnit("Celcius");
+			unit="Celsius";
+			elegantNewTabApp.setWeatherUnit("Celsius");
 		}
-		else if(unit=="Celcius") {
+		else if(unit=="Celsius") {
 			unit="Fahrenheit";
 			elegantNewTabApp.setWeatherUnit("Fahrenheit");
 		}
@@ -377,6 +369,9 @@ $(document).ready(function(){
 	$("#developer").on("click", function() {
 		chrome.tabs.create({url:'http://www.udaiarora.com'})
 	});
+
+	//Get image URL from Bing for the picture of the day.
+	elegantNewTabApp.setPageBG();
 
 
 	console.log("Developed by Udai Arora http://www.udaiarora.com")

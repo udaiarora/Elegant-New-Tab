@@ -47,7 +47,8 @@ html {
 .overlay {
 	/*background-image: linear-gradient(160deg,#e0be00,#dc4225);*/
 	/*background-image: linear-gradient(160deg,#AA131C,#11126B);*/
-	background-image: linear-gradient(200deg,#6A131C,#41126B);
+	/*background-image: linear-gradient(200deg,#6A131C,#41126B);*/
+	background-image: linear-gradient(200deg,#6A12D6,#410209);
 	opacity: 0.3;
 }
 
@@ -198,20 +199,14 @@ html {
 }
 
 .animate-up {
-	-webkit-transform: translateY(70px);
-	transform: translateY(70px);
+	-webkit-transform: translate(0px,70px);
 	-webkit-animation: moveUp 0.4s ease forwards;
 	animation: moveUp 0.4s ease forwards;
 }
 
 @-webkit-keyframes moveUp {
 	0% { }
-	100% { -webkit-transform: translateY(0); opacity: 0.65; }
-}
-
-@keyframes moveUp {
-	0% { }
-	100% { -webkit-transform: translateY(0); transform: translateY(0); opacity: 0.65; }
+	100% { -webkit-transform: translate(0px,0px); opacity: 0.65; }
 }
 
 .favico {
