@@ -36,7 +36,7 @@ html {
 
 .bg, .overlay {
 	position: absolute;
-	-webkit-filter: blur(6px);
+	-webkit-filter: blur(5px);
 	top: 0px;
 	bottom: 0px;
 	left: 0px;
