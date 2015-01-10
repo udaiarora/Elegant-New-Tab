@@ -10,7 +10,7 @@ A better New Tab for Chrome. <br><br>
 <b>Features</b><br>
 - Inspired by Material Design <br>
 - A new background everyday <br>
-- A new Quote everyday <br>
+- A new Quote every minute! <br>
 - Weather (With animated icons)<br>
 - Top Sites <br>
 - Runs Offline <br>
