@@ -25,6 +25,6 @@ A better New Tab for Chrome. <br><br>
 
 <b>Credits</b> <br>
 Weather Animations inspired by Fabrizio Bianchi's Code Pen <br>
-Material Design from https://github.com/FezVrasta/bootstrap-material-design <br>
+Material Design by https://github.com/FezVrasta/bootstrap-material-design <br>
 Quote by iheartquotes <br>
-Picture of the day from Bing <br>
+Picture of the day by Bing <br>
