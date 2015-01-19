@@ -1,55 +1,22 @@
- // 'use strict';
+// 'use strict';
 
- var elegantNewTabApp=(function($, document, chromeLocalStorage) {
-
-	//Utility Functions
-	function _getBase64Image(img) {
-	    var canvas = document.createElement("canvas");
-	    canvas.width = img.width;
-	    canvas.height = img.height;
-	    // Copy the image contents to the canvas
-	    var ctx = canvas.getContext("2d");
-	    ctx.drawImage(img, 0, 0);
-	    // Get the data-URL formatted image
-	    // Firefox supports PNG and JPEG. You could check img.src to guess the
-	    // original format, but be aware the using "image/jpg" will re-encode the image.
-	    var dataURL = canvas.toDataURL("image/png");
-	    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-	}
-
-
-
-
-
-
-
+var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, console) {
 
 	//Weather
-
-	var _getAndSetWeather = function (cached) {
-		navigator.geolocation.getCurrentPosition(
-			function(location) {
-				_getAndSetWeatherWithLocation(location,_setWeather,cached);
-			});
-	}
-
 
 	var _getAndSetWeatherWithLocation= function (location, callbackFunction, cached) {
 		var timestamp= chromeLocalStorage.weatherTimestamp;
 		
 		//If cached weather is less than 15 mins old
 		if(cached && timestamp && Date.now()-timestamp<900000 && chromeLocalStorage.weatherData) {
-			console.log("Cached Weather")
+			console.log("Cached Weather");
 			callbackFunction(JSON.parse(chromeLocalStorage.weatherData));
 		}
 
 		//If cached weather is older than 30 mins
 		else {
-			console.log("AJAXED Weather")
-			var returnObj;
-			var weatherCode;
-			var sunset;
-			var sunrise;
+			console.log("AJAXED Weather");
+			var returnObj, weatherCode, sunset, sunrise;
 			$.ajax({
 				url: "http://api.openweathermap.org/data/2.5/weather",
 				data: {
@@ -57,14 +24,14 @@
 					lon: location.coords.longitude
 				}
 			}).done(function (data){
-				console.log("Weather GET Success.")
-				weatherCode=data.weather[0].id;
-				sunset=data.sys.sunset;
-				sunrise=data.sys.sunrise;
-				var iconClass= _getWeatherIcon(weatherCode, sunset, sunrise);
-				var cur_temp=parseInt(data.main.temp);
+				console.log("Weather GET Success.");
+				weatherCode = data.weather[0].id;
+				sunset = data.sys.sunset;
+				sunrise = data.sys.sunrise;
+				var iconClass = _getWeatherIcon(weatherCode, sunset, sunrise);
+				var cur_temp = parseInt(data.main.temp);
 				
-				returnObj= {
+				returnObj = {
 					"iconClass" : iconClass,
 					"cityName" : data.name,
 					"weatherDesc" : data.weather[0].main,
@@ -77,6 +44,14 @@
 				console.log("Failed to fetch weather");
 			});
 		}
+	}
+
+
+	var _getAndSetWeather = function (cached) {
+		navigator.geolocation.getCurrentPosition(
+			function(location) {
+				_getAndSetWeatherWithLocation(location,_setWeather,cached);
+			});
 	}
 
 
@@ -182,37 +157,22 @@
 
 
  	var setPageBG= function (){
- 		var timestamp= chromeLocalStorage.bgTimestamp;
- 		//30 min old
- 		if(timestamp && timestamp>Date.now()-1800000 && chromeLocalStorage.bgimage && chromeLocalStorage.bgimage!="data:,") {
- 			var dataImage = chromeLocalStorage.getItem('bgimage');
-			document.querySelector(".bg").style.backgroundImage="url("+"data:image/png;base64," + dataImage+")";
- 		}
- 		else {
- 			$.ajax({
- 			url: 'http://www.bing.com/HPImageArchive.aspx',
- 			data: {
- 				format: "js",
- 				idx: "0",
- 				n: "1",
- 				mkt: "en-US"
- 			}
-	 		}).done(function(data){
-	 			var imgUrl= "http://www.bing.com"+data.images[0].url;
-	 			// var img = new Image();
-	 			// img.src=imgUrl;
- 				document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
- 				// 	bannerImage = document.getElementById('bannerImg');
-				// imgData = _getBase64Image(img);
-				// console.log(imgData)
-				// chromeLocalStorage.setItem("bgimage", imgData);
-	 			// 	chromeLocalStorage.bgTimestamp=Date.now();
-	 		}).fail(function(data){
-	 			var imgUrl= "/resources/images/default-background.jpg";
-	 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
-	 		});
-
- 		}
+ 		
+		$.ajax({
+		url: 'http://www.bing.com/HPImageArchive.aspx',
+		data: {
+			format: "js",
+			idx: "0",
+			n: "1",
+			mkt: "en-US"
+		}
+		}).done(function(data){
+			var imgUrl= "http://www.bing.com"+data.images[0].url;
+			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+		}).fail(function(data){
+			var imgUrl= "/resources/images/default-background.jpg";
+			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
+		});
  	};
 
 
@@ -419,7 +379,7 @@
 	}
 
 
-})(jQuery, document, localStorage);
+})(jQuery, document, localStorage, navigator, console);
 
 
 
