@@ -48,7 +48,7 @@ html {
 	/*background-image: linear-gradient(160deg,#e0be00,#dc4225);*/
 	/*background-image: linear-gradient(160deg,#AA131C,#11126B);*/
 	/*background-image: linear-gradient(200deg,#6A131C,#41126B);*/
-	background-image: linear-gradient(200deg,#6A12D6,#410209);
+	background-image: linear-gradient(200deg,#6A12D6,#417229);
 	opacity: 0.3;
 }
 
@@ -144,7 +144,7 @@ html {
 	width: -webkit-calc(100% - 50px);
 	font-size: 14px;
 	color: #222;
-	background: url("/resources/images/EEEEEE-0.65.png");
+	background: url("/resources/images/ent-EEEEEE-0.65.png");
 }
 
 .search-icon {
@@ -184,7 +184,7 @@ html {
 	position: absolute;
 	top: 16px;
 	right: 4px;
-	background-image: url("/resources/images/close.svg");
+	background-image: url("/resources/images/ent-close.svg");
 	height: 20px;
 	width: 20px;
 	background-size: cover;

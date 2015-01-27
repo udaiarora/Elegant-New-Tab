@@ -157,9 +157,9 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 
 
  	var setPageBG= function (){
- 		
+
 		$.ajax({
-		url: 'http://www.bing.com/HPImageArchive.aspx',
+		url: 'https://www.bing.com/HPImageArchive.aspx',
 		data: {
 			format: "js",
 			idx: "0",
@@ -167,10 +167,10 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 			mkt: "en-US"
 		}
 		}).done(function(data){
-			var imgUrl= "http://www.bing.com"+data.images[0].url;
+			var imgUrl= "https://www.bing.com"+data.images[0].url;
 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
 		}).fail(function(data){
-			var imgUrl= "/resources/images/default-background.jpg";
+			var imgUrl= "/resources/images/ent-default-background.jpg";
 			document.querySelector(".bg").style.backgroundImage="url("+imgUrl+")";
 		});
  	};
@@ -235,7 +235,7 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 				var arr = tmp.hostname.split(".");
 
 				// var logoUrl = "chrome://favicon/http://"+tmp.hostname;
-				var logoUrl = "http://www.google.com/s2/favicons?domain=http://"+tmp.hostname;
+				var logoUrl = "https://www.google.com/s2/favicons?domain=http://"+tmp.hostname;
 				var favIco= "<img class='favico' src='"+logoUrl+"'/>";
 				topSiteHTML+="<a href='" +d[i].url+ "'class='top-site btn btn-default top-site-animate'>"+favIco+"<span class='favico-text'>"+d[i].title+"</span><span class='close hidden' data-link='"+d[i].url+"'></span></a>";
 			}
@@ -249,7 +249,7 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 			var that=$(this);
 			setTimeout(function() {
 				that.addClass("animate-up");
-			}, 70*index);
+			}, 40*index);
 		})
 	};
 
