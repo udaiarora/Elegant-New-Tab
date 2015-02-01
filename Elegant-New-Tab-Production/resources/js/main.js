@@ -324,6 +324,10 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 			chrome.tabs.create({url:'https://www.facebook.com/ElegantNewTab'})
 		});
 
+		$("#follow").on("click", function() {
+			chrome.tabs.create({url:'https://www.twitter.com/elegantnewtab'})
+		});
+
 		$("#developer").on("click", function() {
 			chrome.tabs.create({url:'http://www.udaiarora.com'})
 		});
