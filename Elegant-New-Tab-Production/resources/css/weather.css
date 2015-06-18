@@ -4,35 +4,25 @@
 	animation: sunny 2s linear infinite;
 	background: linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%); 
 	height: 140px;
+	opacity: 0.9;
 	width: 20px; 
 	margin-left: -15px;
 	position: absolute;
 	top:0px;
 
 }
-.sunny:before {
-	background: linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
-	content: ''; 
-	height: 140px; 
-	width: 20px;
-	opacity: 1; 
-	position: absolute;
-	top:0px;
 
-	-webkit-transform: rotate(90deg); 
-	transform: rotate(90deg);
-}
 .sunny:after {
 	background: #FFEE44; 
 	border-radius: 50%; 
-	box-shadow: rgba(255,255,0,0.2) 0 0 0 15px;
+	box-shadow:  0 0 4px 15px rgba(255,255,0,0.2);
 	content: '';  
 	height: 80px;
 	width: 80px;  
 	position: absolute;
 	top:0px;
-
 }
+
 @-webkit-keyframes sunny { 
 	50% { -webkit-transform: scale(1.1,1.1); transform: scale(1.1,1.1); }
 }
@@ -41,6 +31,7 @@
 }
 /* CLOUDY */
 .cloudy {
+	opacity: 0.9;
 	-webkit-animation: cloudy 5s ease-in-out infinite;
 	animation: cloudy 5s ease-in-out infinite;
 	background: #FFFFFF;
@@ -59,6 +50,7 @@
 
 }
 .cloudy:after {
+	opacity: 0.9;
 	-webkit-animation: cloudy_shadow 5s ease-in-out infinite;
 	animation: cloudy_shadow 5s ease-in-out infinite;
 	background: #000000;
@@ -87,7 +79,8 @@
 }
 
 /* RAINY */
-.rainy {
+.rainy {	
+	opacity: 0.9;
 	-webkit-animation: rainy 5s ease-in-out infinite 1s;
 	animation: rainy 5s ease-in-out infinite 1s;
 	background: #CCCCCC; 
@@ -328,7 +321,8 @@
 
 
 /* RAINBOW */
-.rainbow {
+.rainbow {	
+	opacity: 0.9;
 	-webkit-animation: rainbow 5s ease-in-out infinite;
 	animation: rainbow 5s ease-in-out infinite;
 	border-radius: 170px 0 0 0;
@@ -380,6 +374,7 @@
 
 /* STARRY */
 .starry {
+	opacity: 0.9;
 	-webkit-animation: starry_star 3s ease-in-out infinite;
 	animation: starry_star 3s ease-in-out infinite;
 	background: #fff;
@@ -402,12 +397,12 @@
 	height: 4px;
 	width: 4px; 
 	margin-left: -10px;
-	opacity: 1;
 	position: absolute;
 	top:100px;
 
 }
 .starry:after { 
+	opacity: 0.9;
 	-webkit-animation: starry 3s ease-in-out infinite; 
 	animation: starry 3s ease-in-out infinite;
 	border-radius: 50%;
@@ -472,6 +467,7 @@
 
 /* STORMY */
 .stormy {
+	opacity: 0.9;
 	-webkit-animation: stormy 5s ease-in-out infinite;
 	animation: stormy 5s ease-in-out infinite;
 	background: #222222;
@@ -505,6 +501,7 @@
 	transform: scale(.7);
 }
 .stormy:before {
+	opacity: 0.9;
 	-webkit-animation: stormy_thunder 2s steps(1, end) infinite;
 	animation: stormy_thunder 2s steps(1, end) infinite; 
 	border-left: 0px solid transparent;
@@ -550,6 +547,7 @@
 
 /* SNOWY */
 .snowy {
+	opacity: 0.9;
 	-webkit-animation: snowy 5s ease-in-out infinite 1s;
 	animation: snowy 5s ease-in-out infinite 1s;
 	background: #FFFFFF; 
@@ -792,8 +790,48 @@
 
 /* HAZE */
 .haze {
-	background: url("/resources/images/haze.png");
-	height: 100px;
-	width: 100px;
-	background-size: cover;
+	opacity: 0.8;
+	-webkit-animation: haze 5s ease-in-out infinite;
+	animation: haze 5s ease-in-out infinite;
+	background: #aaa;
+	border-radius: 20%;
+	box-shadow: 
+	#aaa 65px -15px 0 -2px, 
+	#aaa 25px -25px, 
+	#aaa 30px 10px, 
+	#aaa 60px 15px 0 -10px, 
+	#aaa 85px 5px 0 -5px;
+	height: 50px;
+	width: 50px; 
+	margin-left: -60px;
+	position: absolute;
+	top:0px;
+
+}
+.haze:after {
+	-webkit-animation: haze_shadow 5s ease-in-out infinite;
+	animation: haze_shadow 5s ease-in-out infinite;
+	background: #000000;
+	border-radius: 20%;
+	content: '';
+	height: 15px;
+	width: 120px;
+	opacity: 0.2;
+	position: absolute;
+	top:100px;
+
+	-webkit-transform: scale(.7);
+	transform: scale(.7);
+}
+@-webkit-keyframes haze {
+	50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); zo }
+}
+@keyframes haze {
+	50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); }
+}
+@-webkit-keyframes haze_shadow {
+	50% { -webkit-transform: translateY(10px) scale(1); transform: translateY(10px) scale(1); opacity:.05; }
+}
+@keyframes haze_shadow {
+	50% { -webkit-transform: translateY(10px) scale(1); transform: translateY(10px) scale(1); opacity:.05; }
 }

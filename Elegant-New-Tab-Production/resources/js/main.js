@@ -294,7 +294,7 @@ var initialize = function() {
 		var date = new Date(),
 		year = date.getFullYear(),
 		month = date.getMonth(),
-		day = date.getUTCDate(),
+		day = date.getDate(),
 		months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
 		document.getElementById('daymonth').innerHTML = months[month] + " " + day;
@@ -594,38 +594,6 @@ var displayQuote= function() {
 
 
 
-
-
-	var _trackClicks = function(e){
-		_gaq.push(['_trackEvent', e.target.id, 'clicked']);
-	}
-
-	var setupAnalytics = function() {
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-63206757-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = 'https://ssl.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-		})();
-		var buttons = document.querySelectorAll('a');
-		for (var i = 0; i < buttons.length; i++) {
-			buttons[i].addEventListener('click', _trackClicks);
-		}
-	}
-
-
-
-
-
-
-
-
 	return {
 		setPageBG:setPageBG,
 		displayQuote:displayQuote,
@@ -634,8 +602,7 @@ var displayQuote= function() {
 		handleClickEvents: handleClickEvents,
 		displayWeather: displayWeather,
 		displayTopSites: displayTopSites,
-		initialize: initialize,
-		setupAnalytics: setupAnalytics
+		initialize: initialize
 	}
 
 
@@ -662,6 +629,5 @@ $(document).ready(function(){
 
 	//Get image URL from Bing for the picture of the day.
 	elegantNewTabApp.setPageBG();
-	elegantNewTabApp.setupAnalytics();
 
 });
