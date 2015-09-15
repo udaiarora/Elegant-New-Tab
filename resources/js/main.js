@@ -21,7 +21,6 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 	}
 
 
-
 	//Weather
 	var _getAndSetWeather = function (cached) {
 		
@@ -29,8 +28,8 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 		var timestamp= chromeLocalStorage.getItem("weatherTimestamp");
 		
 		//If cached weather is less than 30 mins old
-		if(cached && timestamp && Date.now()-timestamp<1800000 && chromeLocalStorage.getItem("weatherData")) {
-			// console.log("Cached Weather");
+		if(cached && timestamp && Date.now()-timestamp<30*60*1000 && chromeLocalStorage.getItem("weatherData")) {
+			console.log("Cached Weather");
 			_setWeather(JSON.parse(chromeLocalStorage.getItem("weatherData")));
 		}
 
@@ -40,113 +39,116 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 				function(location) {
 					// console.log("AJAXED Weather");
 					var returnObj, weatherCode, sunset, sunrise;
-					$.ajax({
-						url: "http://api.openweathermap.org/data/2.5/weather",
-						data: {
-							lat: location.coords.latitude,
-							lon: location.coords.longitude
-						}
-					}).done(function (data){
-						console.log("Weather GET Success.");
-						weatherCode = data.weather[0].id;
-						sunset = data.sys.sunset;
-						sunrise = data.sys.sunrise;
-						var iconClass = _getWeatherIcon(weatherCode, sunset, sunrise);
-						var cur_temp = parseInt(data.main.temp);
 
-						returnObj = {
-							"iconClass" : iconClass,
-							"cityName" : data.name,
-							"weatherDesc" : data.weather[0].main,
-							"cur_temp" : cur_temp
-						};
-						chromeLocalStorage.setItem("weatherData",JSON.stringify(returnObj));
-						chromeLocalStorage.setItem("weatherTimestamp",Date.now());
-						_setWeather(returnObj);	
-					}).fail(function(){
-						console.log("Failed to fetch weather");
+					$.simpleWeather({
+						location: location.coords.latitude+", "+location.coords.longitude,
+						woeid: '',
+						unit: 'f',
+						success: function(weather) {
+							html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
+							html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
+							html += '<li class="currently">'+weather.currently+'</li>';
+							html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
+							returnObj = {
+								// "iconClass" : iconClass,
+								"cityName" : weather.city,
+								"weatherDesc" : weather.text,
+								"cur_temp" : weather.temp
+							};
+							chromeLocalStorage.setItem("weatherData",JSON.stringify(returnObj));
+							chromeLocalStorage.setItem("weatherTimestamp",Date.now());
+							_setWeather(returnObj);	
+
+						},
+						error: function(error) {
+							$("#weather").html('<p>'+error+'</p>');
+						}
 					});
+
+
+					
+					
 
 				});
 
-}
-
-
-}
-
-
-var _setWeather = function (weatherObj) {
-	var user_preffered_unit = _getWeatherUnit();
-	var cur_temp = weatherObj.cur_temp;
-
-	if(user_preffered_unit=="Fahrenheit") {
-		cur_temp=(weatherObj.cur_temp-273)* 1.8 + 32.0;
-	}
-	else if(user_preffered_unit=="Celsius") {
-		cur_temp-=273;
-	}
-	cur_temp=parseInt(cur_temp);
-
-	$("#weather").removeClass();
-	$("#weather").addClass("inline-block").addClass(weatherObj.iconClass);
-	$("#loc").html(weatherObj.cityName);
-	$("#cond").html(weatherObj.weatherDesc);
-	$("#curr").html(cur_temp);
-	$("#thermo").html(_getWeatherUnit());
-}
-
-
-var _getWeatherUnit = function() {
-	if(!chromeLocalStorage.getItem("unit")) {
-		chromeLocalStorage.setItem("unit","Fahrenheit");
-	}
-	return chromeLocalStorage.getItem("unit");
-};
-
-
-var _setWeatherUnit = function(unitToBeSet) {
-	chromeLocalStorage.setItem("unit",unitToBeSet);
-}
-
-
-var _getWeatherIcon= function (weatherCode, sunset, sunrise) {
-	var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
-	var thunderstorm = [210,211,212,221,230,231,232,956,957,958,959,960,961,962];
-	var snow= [600,601,602,611,612,615,616,620,621,622,906];
-	var sunny = [800,801];
-	var clouds= [802,803,804,900,901,902,905];
-	var rainbow = [951,952,953,954,955];
-	var haze = [701,711,721,731,741,751,761,762,771,781];
-	if(rain.indexOf(weatherCode)>-1) {
-		return "rainy";
-	}
-	if(thunderstorm.indexOf(weatherCode)>-1) {
-		return "stormy";
-	}
-	if(snow.indexOf(weatherCode)>-1) {
-		return "snowy";
-	}
-	if(sunny.indexOf(weatherCode)>-1) {
-		if(Date.now()/1000<sunset && Date.now()/1000>sunrise) {
-			return "sunny";
 		}
-		return "starry";
+
+
 	}
-	if(clouds.indexOf(weatherCode)>-1) {
-		return "cloudy";
+
+
+	var _setWeather = function (weatherObj) {
+		var user_preffered_unit = _getWeatherUnit();
+		var cur_temp = parseInt(weatherObj.cur_temp);
+
+		if(user_preffered_unit=="Kelvin") {
+			cur_temp=(cur_temp+459.67)/ 1.8;
+		}
+		else if(user_preffered_unit=="Celsius") {
+			cur_temp=(cur_temp-32)/1.8;
+		}
+		cur_temp=parseInt(cur_temp);
+
+		$("#weather").removeClass();
+		// $("#weather").addClass("inline-block").addClass(weatherObj.iconClass);
+		$("#loc").html(weatherObj.cityName);
+		$("#cond").html(weatherObj.weatherDesc);
+		$("#curr").html(cur_temp);
+		$("#thermo").html(_getWeatherUnit());
 	}
-	if(rainbow.indexOf(weatherCode)>-1) {
-		return "rainbow";
+
+
+	var _getWeatherUnit = function() {
+		if(!chromeLocalStorage.getItem("unit")) {
+			chromeLocalStorage.setItem("unit","Fahrenheit");
+		}
+		return chromeLocalStorage.getItem("unit");
+	};
+
+
+	var _setWeatherUnit = function(unitToBeSet) {
+		chromeLocalStorage.setItem("unit",unitToBeSet);
 	}
-	else {
-		return "haze";
+
+
+	var _getWeatherIcon= function (weatherCode, sunset, sunrise) {
+		var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
+		var thunderstorm = [210,211,212,221,230,231,232,956,957,958,959,960,961,962];
+		var snow= [600,601,602,611,612,615,616,620,621,622,906];
+		var sunny = [800,801];
+		var clouds= [802,803,804,900,901,902,905];
+		var rainbow = [951,952,953,954,955];
+		var haze = [701,711,721,731,741,751,761,762,771,781];
+		if(rain.indexOf(weatherCode)>-1) {
+			return "rainy";
+		}
+		if(thunderstorm.indexOf(weatherCode)>-1) {
+			return "stormy";
+		}
+		if(snow.indexOf(weatherCode)>-1) {
+			return "snowy";
+		}
+		if(sunny.indexOf(weatherCode)>-1) {
+			if(Date.now()/1000<sunset && Date.now()/1000>sunrise) {
+				return "sunny";
+			}
+			return "starry";
+		}
+		if(clouds.indexOf(weatherCode)>-1) {
+			return "cloudy";
+		}
+		if(rainbow.indexOf(weatherCode)>-1) {
+			return "rainbow";
+		}
+		else {
+			return "haze";
+		}
+	};
+
+
+	var displayWeather = function() {
+		_getAndSetWeather(true);
 	}
-};
-
-
-var displayWeather = function() {
-	_getAndSetWeather(true);
-}
 
 
 
@@ -158,11 +160,11 @@ var displayWeather = function() {
 
 
 
-var initialize = function() {
-	if(!chromeLocalStorage.getItem("removedSites")) {
-		var arr=[];
-		chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
-	}
+	var initialize = function() {
+		if(!chromeLocalStorage.getItem("removedSites")) {
+			var arr=[];
+			chromeLocalStorage.setItem("removedSites", JSON.stringify(arr));
+		}
 
 	//Setup Up Weather vs Agenda
 	(function(){
@@ -222,63 +224,6 @@ var initialize = function() {
 			}
 		}
 	});
-
-
-	//Optional Intro
-	if(!chromeLocalStorage.getItem("intro") || chromeLocalStorage.getItem("intro")!="false")
-	{
-		chromeLocalStorage.setItem("intro","false");
-		
-		var trip = new Trip([
-
-		{
-			sel : $('.main-container'),
-			content : 'Welcome to Elegant New Tab v3.0. Let`s get you up and running with a quick 10 second tour',
-			delay: 5000,
-			position: "screen-center",
-			expose : true
-		},
-		{
-			sel : $('#search-bar'),
-			content : 'Search is now Autocomplete Capable',
-			delay: 2000,
-			animation: 'fadeInUp',
-			expose : true
-		},
-		{
-			sel : $('#location'),
-			content : 'Click here to get update your location',
-			delay: 2500,
-			animation: 'fadeInUp',
-			expose : true
-		},
-		{
-			sel : $('#weatherInfo'),
-			content : 'And here to change the weather unit',
-			delay: 2500,
-			animation: 'fadeInUp',
-			expose : true
-		},
-		{
-			sel : $('.options'),
-			content : 'You can now chose a custom background from the Settings panel',
-			position : 'w',
-			delay: 5000,
-			animation: 'fadeInUp',
-			expose : true
-		},
-		{
-			sel : $('#top'),
-			content : 'One more thing...The ripple effect on top sites is now color adaptive!',
-			delay: 3500,
-			animation: 'fadeInUp'
-		}
-		]); // details about options are listed below
-
-		// trip.start();
-
-}
-
 
 	//Load Persona Info and Agenda
 	if(chromeLocalStorage.getItem("personName")) {
@@ -629,5 +574,11 @@ $(document).ready(function(){
 
 	//Get image URL from Bing for the picture of the day.
 	elegantNewTabApp.setPageBG();
+
+
+
+	
+
+
 
 });
