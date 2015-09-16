@@ -23,8 +23,6 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 
 	//Weather
 	var _getAndSetWeather = function (cached) {
-		
-
 		var timestamp= chromeLocalStorage.getItem("weatherTimestamp");
 		
 		//If cached weather is less than 30 mins old
@@ -37,20 +35,19 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 		else {
 			navigator.geolocation.getCurrentPosition(
 				function(location) {
-					// console.log("AJAXED Weather");
+					console.log("AJAXED Weather");
 					var returnObj, weatherCode, sunset, sunrise;
+
 
 					$.simpleWeather({
 						location: location.coords.latitude+", "+location.coords.longitude,
 						woeid: '',
 						unit: 'f',
 						success: function(weather) {
-							html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
-							html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
-							html += '<li class="currently">'+weather.currently+'</li>';
-							html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
+							var iconClass = _getWeatherIcon(parseInt(weather.code), weather.sunset, weather.sunrise);
+							console.log(weather.code)
 							returnObj = {
-								// "iconClass" : iconClass,
+								"iconClass" : iconClass,
 								"cityName" : weather.city,
 								"weatherDesc" : weather.text,
 								"cur_temp" : weather.temp
@@ -90,7 +87,7 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 		cur_temp=parseInt(cur_temp);
 
 		$("#weather").removeClass();
-		// $("#weather").addClass("inline-block").addClass(weatherObj.iconClass);
+		$("#weather").addClass("inline-block").addClass(weatherObj.iconClass);
 		$("#loc").html(weatherObj.cityName);
 		$("#cond").html(weatherObj.weatherDesc);
 		$("#curr").html(cur_temp);
@@ -112,13 +109,13 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 
 
 	var _getWeatherIcon= function (weatherCode, sunset, sunrise) {
-		var rain = [200,201,202,300,301,302,310,311,312,313,314,321,500,501,502,503,504,511,520,521,522,531];
-		var thunderstorm = [210,211,212,221,230,231,232,956,957,958,959,960,961,962];
-		var snow= [600,601,602,611,612,615,616,620,621,622,906];
-		var sunny = [800,801];
-		var clouds= [802,803,804,900,901,902,905];
+		var rain = [5,6,7,8,9,10,11,12,35,40,45,47];
+		var thunderstorm = [0,1,2,3,4,37,38,39];
+		var snow= [13,14,15,16,17,18,41,42,43,46];
+		var sunny = [31,32,33,34,36];
+		var clouds= [26,27,28,29,30,44];
 		var rainbow = [951,952,953,954,955];
-		var haze = [701,711,721,731,741,751,761,762,771,781];
+		var haze = [20,21,22,23,24,25];
 		if(rain.indexOf(weatherCode)>-1) {
 			return "rainy";
 		}
@@ -307,16 +304,16 @@ var displayQuote= function() {
 	var timestamp= chromeLocalStorage.getItem("quoteTimestamp");
 
 		//If cached quote is less than 1 mins old
-		if(timestamp && Date.now()-timestamp<60000 && chromeLocalStorage.getItem("quote")) {
+		if(timestamp && Date.now()-timestamp<1*60*1000 && chromeLocalStorage.getItem("quote")) {
 			var quote= chromeLocalStorage.getItem("quote");
 			$("#search-bar").attr('placeholder',quote).attr('title',quote);	
 		}
 
 		else {
 			$.ajax({
-				url: 'http://www.iheartquotes.com/api/v1/random?max_characters=60&format=json'
+				url: 'http://www.swanandmokashi.com/Homepage/Webservices/QuoteOfTheDay.asmx/GetQuote'
 			}).success(function(quoteJson) {
-				var quote=quoteJson.quote;
+				var quote=quoteJson['childNodes'][0]['children'][0]['innerHTML']
 				chromeLocalStorage.setItem("quote", quote);
 				chromeLocalStorage.setItem("quoteTimestamp", Date.now());
 				$("#search-bar").attr('placeholder',quote).attr('title',quote);	
