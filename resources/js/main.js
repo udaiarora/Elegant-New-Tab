@@ -44,8 +44,8 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 						woeid: '',
 						unit: 'f',
 						success: function(weather) {
+							weather.code=31;
 							var iconClass = _getWeatherIcon(parseInt(weather.code), weather.sunset, weather.sunrise);
-							console.log(weather.code)
 							returnObj = {
 								"iconClass" : iconClass,
 								"cityName" : weather.city,
@@ -108,11 +108,12 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 	}
 
 
-	var _getWeatherIcon= function (weatherCode, sunset, sunrise) {
+	var _getWeatherIcon= function (weatherCode) {
 		var rain = [5,6,7,8,9,10,11,12,35,40,45,47];
 		var thunderstorm = [0,1,2,3,4,37,38,39];
 		var snow= [13,14,15,16,17,18,41,42,43,46];
-		var sunny = [31,32,33,34,36];
+		var sunny = [32,34,36];
+		var starry = [31,33]
 		var clouds= [26,27,28,29,30,44];
 		var rainbow = [951,952,953,954,955];
 		var haze = [20,21,22,23,24,25];
@@ -126,10 +127,10 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 			return "snowy";
 		}
 		if(sunny.indexOf(weatherCode)>-1) {
-			if(Date.now()/1000<sunset && Date.now()/1000>sunrise) {
 				return "sunny";
-			}
-			return "starry";
+		}
+		if(starry.indexOf(weatherCode)>-1) {
+				return "starry";
 		}
 		if(clouds.indexOf(weatherCode)>-1) {
 			return "cloudy";
@@ -167,12 +168,12 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 	(function(){
 		$(".onoffswitch-checkbox")[0].checked=chromeLocalStorage.getItem("weatherVsAgenda")==="true";
 		if($(".onoffswitch-checkbox")[0].checked) {
-			$("#notes").addClass("hidden");
-			$("#weathers").removeClass("hidden");
-		}
-		else {
 			$("#weathers").addClass("hidden");
 			$("#notes").removeClass("hidden");
+		}
+		else {
+			$("#notes").addClass("hidden");
+			$("#weathers").removeClass("hidden");
 		}
 	}())
 
@@ -481,17 +482,21 @@ var displayQuote= function() {
 			e.stopPropagation();
 		});
 
+		$("body").on("click", "a", function(e){
+			console.log($(this).attr('href'))
+		});
+
 		//Weather vs Agenda
 		$(".onoffswitch-checkbox").on("change", function(){
 			chromeLocalStorage.setItem("weatherVsAgenda",$(".onoffswitch-checkbox")[0].checked);
 
 			if($(".onoffswitch-checkbox")[0].checked) {
-				$("#notes").addClass("hidden");
-				$("#weathers").removeClass("hidden");
-			}
-			else {
 				$("#weathers").addClass("hidden");
 				$("#notes").removeClass("hidden");
+			}
+			else {
+				$("#notes").addClass("hidden");
+				$("#weathers").removeClass("hidden");
 			}
 		});
 

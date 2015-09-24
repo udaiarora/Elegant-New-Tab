@@ -509,13 +509,13 @@ a {
 	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-	content: "Weather";
+	content: "Agenda";
 	padding-left: 10px;
 	background-color: rgba(200,200,200,0.4);
 	color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-	content: "Agenda";
+	content: "Weather";
 	padding-right: 10px;
 	background-color: rgba(200,200,200,0.4);
 	color: #FFFFFF;
