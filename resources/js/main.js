@@ -44,7 +44,6 @@ var elegantNewTabApp = (function ($, document, chromeLocalStorage, navigator, co
 						woeid: '',
 						unit: 'f',
 						success: function(weather) {
-							weather.code=31;
 							var iconClass = _getWeatherIcon(parseInt(weather.code), weather.sunset, weather.sunrise);
 							returnObj = {
 								"iconClass" : iconClass,
